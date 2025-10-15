@@ -62,7 +62,7 @@
   color: #065f46;
 }
 
-.order-status['em andamento'] {
+.order-status.andamento{
   background-color: #dbeafe;
   color: #1e40af;
 }
