@@ -1,0 +1,28 @@
+.App {
+  text-align: center;
+}
+
+
+.backtop-custom {
+  margin-left: 55px;
+  height: 50px;
+  width: 50px;
+  background-color:#d94a4a;
+  color: white;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 50%;
+  font-size: 49px;
+  box-shadow: 0 7px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+}
+
+.backtop-custom:hover {
+  background-color: #8e3232;
+  transform: scale(1.1);
+}
+
+
+
+
+ 

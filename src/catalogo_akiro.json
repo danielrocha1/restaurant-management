@@ -1,0 +1,820 @@
+{
+  "Combinados": [
+    {
+      "nome": "Combo Hot Philadelfia - 30 peças",
+      "descricao": "Sem descrição",
+      "preco": "R$ 49,99\nR$ 44,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010292/20230201183706_Easy-Resize.webp"
+    },
+    {
+      "nome": "Combinado Express",
+      "descricao": "2 temakis philadelfia, 12 hots philadelfia",
+      "preco": "R$ 59,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010291/20230512214340_Easy-Resize.webp"
+    },
+    {
+      "nome": "Promo Roll - 90 Peças",
+      "descricao": "(não é possível alterar os itens desse combo) 30 hots philadelfia | 15 makimonos philadelfia | 15 uramakis philadelfia | 30 makimonos skin",
+      "preco": "R$ 149,99\nR$ 84,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2039864/photo1690652205.jpeg.webp"
+    },
+    {
+      "nome": "Combinado Eu Amo Japa - 20 peças",
+      "descricao": "Não é possivel alterar os itens desse combo\n\n- 6 makimonos philadelfia, 6 uramakis philadelfia, 4 jow sakenege, 2 sushis maçaricados, 2 sushis especiais maçaricados",
+      "preco": "R$ 64,49",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010290/20230512220412_Easy-Resize.webp"
+    },
+    {
+      "nome": "Novo Combinado do Cheef - 36 peças",
+      "descricao": "Não é possivel alterar os itens desse combo\n\n- Jow sushi: 2 sekenegue / Sashimi: 3 sashimi de salmão, 3 de peixe branco / Sushi: 2 sushi skin / Uramaki: 2 bosto, 2 ebi, 2 skin / Makimonos: 2 de philadelfia, 2 de kani, 2 ebi / Hot: 12 hots philadelfia, 2 hots kube",
+      "preco": "R$ 80,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010289/20230512220700_Easy-Resize.webp"
+    },
+    {
+      "nome": "Combinado Akiro Promo - 44 peças",
+      "descricao": "Não é possivel alterar os itens desse combo\n\n- Sashimi: 4 salmões, 4 atuns, 4 peixe branco / sushi: 2 salmões, 2 haddock, 2 skin  / Uramaki: 2 uramaki philadelfia, 4 boston (atum com salmão / Makimonos: 2 philadelfia, 2 skin / Hot: 10 hots philadelfia, 6 hots skin",
+      "preco": "R$ 95,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010288/20230512220830_Easy-Resize.webp"
+    },
+    {
+      "nome": "Combinado Super Salmão - 48 peças",
+      "descricao": "Não é possivel alterar os itens desse combo\n\n- Sashimi: 6 salmões, 6 salmões maçaricado / sushi: 4 salmões, 2 salmões maçaricado, 2 brulee / Jow Sushi: 2 sekenegue, 2 salmões / Mini Temaki: 2 salmões / Uramaki: 4 uramaki philadelfia / Makimonos: 4 makimono philadelfia / Hot: 12 hots philadelfia, 2 coxinhas",
+      "preco": "R$ 148,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010287/20230512220951_Easy-Resize.webp"
+    }
+  ],
+  "Pratos Quentes": {
+    "Hot Roll": [
+      {
+        "nome": "36 Hots skin ao molho tarê e cebolinha",
+        "descricao": "Imagem ilustrativa!",
+        "preco": "R$ 35,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2407803/photo1717460201.jpeg.webp"
+      },
+      {
+        "nome": "20 Makimonos Philadélfia + 20 Hots skin",
+        "descricao": "Imagem ilustrativa!",
+        "preco": "R$ 89,92\nR$ 45,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2407807/photo1717460556.jpeg.webp"
+      },
+      {
+        "nome": "20 hots Philadélfia + 20 hots skin",
+        "descricao": "Sem descrição",
+        "preco": "R$ 81,92\nR$ 49,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2407804/photo1717459938.jpeg.webp"
+      },
+      {
+        "nome": "10 Makimonos Philadelfia + 5 Hots Philadeflia + 1 Harumaki de Camarão",
+        "descricao": "Sem descrição",
+        "preco": "R$ 36,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2048758/photo1691687563.jpeg.webp"
+      },
+      {
+        "nome": "Hot Skin - 5 peças",
+        "descricao": "- Pele de salmão fita, cream cheese, arroz temperado, alga nori, empanado na panko",
+        "preco": "R$ 6,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010227/20230316213451_Easy-Resize.webp"
+      },
+      {
+        "nome": "Hot de Haddock - 5 peças",
+        "descricao": "- Arroz, haddock, cream cheese, empanado na panko",
+        "preco": "R$ 12,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010225/20230316214352_Easy-Resize.webp"
+      },
+      {
+        "nome": "Hot Tuna - 5 peças",
+        "descricao": "- Arroz, atum, cream cheese, empanado na panko",
+        "preco": "R$ 12,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010224/20230316215311_Easy-Resize.webp"
+      },
+      {
+        "nome": "Hot de Peixe Branco - 5 peças",
+        "descricao": "- Arroz, peixe branco, cream cheese, empanado na panko",
+        "preco": "R$ 12,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010223/20230316214056_Easy-Resize.webp"
+      },
+      {
+        "nome": "Hot Ebi - 5 peças",
+        "descricao": "- Arroz, camarão, cream cheese, empanado na panko",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010222/20230316214730_Easy-Resize.webp"
+      },
+      {
+        "nome": "Hot Philadelfia - 5 peças",
+        "descricao": "- Arroz, salmão, cream cheese, empanado na panko",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010221/20230316214601_Easy-Resize.webp"
+      },
+      {
+        "nome": "Hot Harumaki - 5 peças",
+        "descricao": "- Arroz, salmão, cream cheese, sem alga, enrolado na folha de harumaki",
+        "preco": "R$ 14,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010220/20230316214446_Easy-Resize.webp"
+      },
+      {
+        "nome": "Hot Frutos - 5 peças",
+        "descricao": "- Hot com peixe branco, empanado na panko, cream cheese extra, 1 camarão em cima de cada unidade, gergelim, cebolinha",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010218/20230316215116_Easy-Resize.webp"
+      },
+      {
+        "nome": "Hot Especial - 5 peças",
+        "descricao": "- Salmão, cream cheese, empanado na panko\n- Sem arroz",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010217/20230316214959_Easy-Resize.webp"
+      }
+    ],
+    "Yakisoba": [
+      {
+        "nome": "Yakisoba de Legumes",
+        "descricao": "Combinação especial do nosso macarrão com acelga, repolho roxo e brócolis",
+        "preco": "R$ 33,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010302/20230512211748_Easy-Resize.webp"
+      },
+      {
+        "nome": "Yakisoba de Frango",
+        "descricao": "Combinação especial do nosso macarrão com frango e legumes",
+        "preco": "R$ 37,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010301/20230512211818_Easy-Resize.webp"
+      },
+      {
+        "nome": "Yakisoba de Carne",
+        "descricao": "Combinação especial do nosso macarrão com carne",
+        "preco": "R$ 39,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010300/20230512211849_Easy-Resize.webp"
+      },
+      {
+        "nome": "Yakisoba Misto",
+        "descricao": "Combinação especial do nosso macarrão com frango, carne, camarão e legumes",
+        "preco": "R$ 44,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010299/20230512211918_Easy-Resize.webp"
+      },
+      {
+        "nome": "Yakisoba de Camarão",
+        "descricao": "Combinação especial do nosso macarrão com camarão e legumes",
+        "preco": "R$ 41,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010298/20230512211947_Easy-Resize.webp"
+      }
+    ],
+    "Guioza": [
+      {
+        "nome": "Guioza de Legumes - 5 peças",
+        "descricao": "Consiste numa massa bem fininha, recheada com legumes",
+        "preco": "R$ 20,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010326/20230512204309_Easy-Resize.webp"
+      },
+      {
+        "nome": "Guioza de Carne Suina - 5 peças",
+        "descricao": "Consiste numa massa bem fininha, recheada com carne suina",
+        "preco": "R$ 20,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010320/20230512204309_Easy-Resize.webp"
+      },
+      {
+        "nome": "Guioza de Carne Bovina - 5 peças",
+        "descricao": "Consiste numa massa bem fininha, recheada com carne bovina",
+        "preco": "R$ 20,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010322/20230512204309_Easy-Resize.webp"
+      },
+      {
+        "nome": "Guioza de Carne Suina com Nirá - 5 peças",
+        "descricao": "Produzido a partir de carnes criteriosamentes selecionadas",
+        "preco": "R$ 20,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010324/20230512204309_Easy-Resize.webp"
+      }
+    ],
+    "Harumaki": [
+      {
+        "nome": "Harumaki de Legumes",
+        "descricao": "Cenoura, acelga, repolho temperados com shoyu e especiarias\nOBS: Produto porcionado, não conseguimos retirar qualquer item descrito",
+        "preco": "R$ 12,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010297/20230512212444_Easy-Resize.webp"
+      },
+      {
+        "nome": "Harumaki de Camarão",
+        "descricao": "Camarão, cream cheese, alho poró, limão, tempero especial",
+        "preco": "R$ 14,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010296/20230315212823_Easy-Resize.webp"
+      },
+      {
+        "nome": "Harumaki de Salmão",
+        "descricao": "Salmão, cream cheese, cebolinha",
+        "preco": "R$ 14,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010295/20230315212848_Easy-Resize.webp"
+      },
+      {
+        "nome": "Harumaki De Banana Com Doce De Leite (1 peça)",
+        "descricao": "Cuidado! nossa deliciosa combinação de doce de leite com banana.",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2039871/photo1690653613.jpeg.webp"
+      },
+      {
+        "nome": "Harumaki de Doce de Leite - 1 peça",
+        "descricao": "Sem descrição",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010157/20230321170953_Easy-Resize.webp"
+      },
+      {
+        "nome": "Harumaki de Nutella - 1 peça",
+        "descricao": "Sem descrição",
+        "preco": "R$ 15,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010156/20230321172229_Easy-Resize.webp"
+      },
+      {
+        "nome": "Harumaki de Morango com Nutella - 1 peça",
+        "descricao": "Sem descrição",
+        "preco": "R$ 15,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010155/20230321171356_Easy-Resize.webp"
+      },
+      {
+        "nome": "Harumaki De Banana Com Nutella (1 peça)",
+        "descricao": "Nosso irresistível haru de nutella pura com banana.",
+        "preco": "R$ 15,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2039870/photo1690653553.jpeg.webp"
+      }
+    ]
+  },
+  "Pratos Frios": {
+    "Makimono": [
+      {
+        "nome": "20 Makimons Philadélfia + 20 Makimonos skin",
+        "descricao": "Sem descrição",
+        "preco": "R$ 91,92\nR$ 46,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2407806/photo1717460409.jpeg.webp"
+      },
+      {
+        "nome": "Makimono Skin - 5 peças",
+        "descricao": "Arroz, pele de salmão",
+        "preco": "R$ 6,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010261/20230316200234_Easy-Resize.webp"
+      },
+      {
+        "nome": "Makimono kani - 5 peças",
+        "descricao": "Arroz, kani",
+        "preco": "R$ 6,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2053279/photo1691806340.jpeg.webp"
+      },
+      {
+        "nome": "Makimono Kapamaki - 5 peças",
+        "descricao": "Arroz, pepino",
+        "preco": "R$ 6,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010260/20230316195400_Easy-Resize.webp"
+      },
+      {
+        "nome": "Makimono California - 5 peças",
+        "descricao": "Arroz, kani, manga, pepino",
+        "preco": "R$ 6,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010259/20230316195506_Easy-Resize.webp"
+      },
+      {
+        "nome": "Makimono Tekamaki - 5 peças",
+        "descricao": "Arroz, Atum",
+        "preco": "R$ 15,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010258/20230316195910_Easy-Resize.webp"
+      },
+      {
+        "nome": "Makimono Ebi - 5 peças",
+        "descricao": "Arroz, camarão, cream cheese",
+        "preco": "R$ 15,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010257/20230316200042_Easy-Resize.webp"
+      },
+      {
+        "nome": "Makimono Philadélfia - 5 peças",
+        "descricao": "Arroz, salmão, cream cheese",
+        "preco": "R$ 15,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010256/20230316200403_Easy-Resize.webp"
+      },
+      {
+        "nome": "Makimono Sakamaki - 5 peças",
+        "descricao": "Arroz, salmão",
+        "preco": "R$ 15,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010255/20230316201139_Easy-Resize.webp"
+      }
+    ],
+    "Temaki": [
+      {
+        "nome": "1 Temaki Philadelfia + 1 Harumaki de Salmão",
+        "descricao": "Sem descrição",
+        "preco": "R$ 45,99\nR$ 38,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010293/20230512214210_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Skin",
+        "descricao": "Arroz, cebolinha, pele de salmão",
+        "preco": "R$ 9,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010174/20230512231223_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Califórnia",
+        "descricao": "Arroz, kani, pepino, manga",
+        "preco": "R$ 9,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010173/20230512231304_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Peixe Branco",
+        "descricao": "Peixe branco, arroz, pimenta biquinho, cebola roxa, coentro, temperos especias",
+        "preco": "R$ 28,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010172/20230512231338_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Atum",
+        "descricao": "Arroz, cebolinha, gergelim, atum",
+        "preco": "R$ 28,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010171/20230512231411_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Ebi & Cebolinha",
+        "descricao": "Camarão, arroz, cream cheese, cebolinha",
+        "preco": "R$ 28,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010170/20230512231443_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Haddock",
+        "descricao": "Haddock, arroz, cream cheese, cebolinha",
+        "preco": "R$ 28,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010169/20230512231521_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Philadelfia",
+        "descricao": "Arroz, salmão, cream cheese, cebolinha",
+        "preco": "R$ 28,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010167/20230512231634_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki de Salmão Maçaricado",
+        "descricao": "Arroz, cream cheese, salmão maçaricado",
+        "preco": "R$ 29,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010166/photo1693789290.jpeg.webp"
+      },
+      {
+        "nome": "Temaki Philadelfia Trufado",
+        "descricao": "Arroz, salmão, cream cheese, azeite trufado, raspa de limão siciliano, flor de sal",
+        "preco": "R$ 28,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010165/20230512232248_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Salmão com Wasabi Crocante",
+        "descricao": "Arroz, salmão, cream cheese, peas de wasabi crocante",
+        "preco": "R$ 28,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010164/20230512232546_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Super Hot Ebi",
+        "descricao": "Temaki empanado de arroz, camarão, cream cheese, cebolinha",
+        "preco": "R$ 29,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010163/20230512232819_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Harumaki Ebi",
+        "descricao": "Cone feito de massa de rolinho primavera, recheado com arroz, cream cheese, cebolinha e camarão",
+        "preco": "R$ 29,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010162/20230512232859_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Harumaki Philadelfia",
+        "descricao": "Cone feito de massa de rolinho primavera, recheado com arroz, cream cheese, cebolinha e salmão",
+        "preco": "R$ 29,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010161/20230512232932_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki Super Hot Philadelfia",
+        "descricao": "Temaki empanado de arroz, salmão, cream cheese e cebolinha",
+        "preco": "R$ 29,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010160/20230512233000_Easy-Resize.webp"
+      },
+      {
+        "nome": "Mini Temaki de Atum",
+        "descricao": "Alga de nori, arroz, atum, cebolinha\n4 peças",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010205/20230512224913_Easy-Resize.webp"
+      },
+      {
+        "nome": "Mini Temaki de Camarão",
+        "descricao": "Alga de nori, arroz, cream cheese, acompanha um camarão em cima\n4 peças",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010204/20230512225001_Easy-Resize.webp"
+      },
+      {
+        "nome": "Mini Temaki de Haddock",
+        "descricao": "Alga de nori, arroz, haddock, cebolinha\n4 peças",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010203/20230512225042_Easy-Resize.webp"
+      },
+      {
+        "nome": "Mini Temaki de Salmão e Cebolinha",
+        "descricao": "Alga de nori, arroz, salmão, cebolinha\n4 peças",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010198/20230512225237_Easy-Resize.webp"
+      },
+      {
+        "nome": "Mini Temaki Philadelfia",
+        "descricao": "Alga de nori, arroz, salmão, cream cheese, cebolinha\n4 peças",
+        "preco": "R$ 13,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010196/20230512225310_Easy-Resize.webp"
+      },
+      {
+        "nome": "Temaki De Banana Com Doce De Leite (1 peça)",
+        "descricao": "O melhor temaki doce da sua região.",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2039874/photo1690653815.jpeg.webp"
+      },
+      {
+        "nome": "Temaki de Morango com Nutella - 1 peça",
+        "descricao": "Sem descrição",
+        "preco": "R$ 17,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010154/20230512233915_Easy-Resize.webp"
+      }
+    ],
+    "Sashimi": [
+      {
+        "nome": "5 Sashimis de Salmão + 10 Makimonos Philadelfia",
+        "descricao": "Sem descrição",
+        "preco": "R$ 38,49\nR$ 32,79",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010294/20230512213720_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de Peixe Branco - 5 peças",
+        "descricao": "Fatias de peixe cru",
+        "preco": "R$ 18,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010216/20230512223748_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de Atum - 5 peças",
+        "descricao": "Fatias de peixe cru",
+        "preco": "R$ 18,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010214/20230512223848_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de Haddock - 5 peças",
+        "descricao": "Fatias de peixe cru",
+        "preco": "R$ 18,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010213/20230512223920_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de Atum Selado - 5 peças",
+        "descricao": "Fatias de peixe cru",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010212/20230512223954_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de Salmão - 5 peças",
+        "descricao": "Fatias de peixe cru",
+        "preco": "R$ 22,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010211/20230512224023_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de Salmão com Molho Fresh - 5 peças",
+        "descricao": "Fatis de peixe cru com molho especial de ervas",
+        "preco": "R$ 22,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010210/20230512224102_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de Salmão Selado com Molho de Maracujá - 5 peças",
+        "descricao": "Fatias de peixe cru levemente maçaricado com molho de maracujá",
+        "preco": "R$ 22,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010209/20230512224138_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de Salmão Trufado - 5 peças",
+        "descricao": "Fatias de peixe cru, azeite trufado, flor de sal, raspa de limão siciliano",
+        "preco": "R$ 22,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010208/20230512224215_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sashimi de salmão Selado - 5 peças",
+        "descricao": "Fatias de peixe levemente grelhado com gergelim",
+        "preco": "R$ 23,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010206/photo1691806213.jpeg.webp"
+      }
+    ],
+    "Sushi": [
+      {
+        "nome": "Sushi de Skin - 4 peças",
+        "descricao": "Arroz, pele de salmão frita",
+        "preco": "R$ 5,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010274/20230316195056_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Kani - 4 peças",
+        "descricao": "Arroz, Kani",
+        "preco": "R$ 6,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010271/20230316194258_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Haddock - 4 peças",
+        "descricao": "Arroz, haddock",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010270/20230316193945_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Atum - 4 peças",
+        "descricao": "Arroz, atum",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010269/20230316193557_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Especial de Salmão Maçaricado - 4 peças",
+        "descricao": "Arroz, salmão, cream cheese, cebolinha por cima maçaricado",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010267/20230316192808_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Peixe Branco - 4 peças",
+        "descricao": "Arroz, peixe branco",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010266/20230316193424_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Salmão - 4 peças",
+        "descricao": "Arroz, salmão",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010265/20230316192629_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Especial de Salmão - 4 peças",
+        "descricao": "Arroz, salmão, cream cheese, cebolinha",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010264/20230316193216_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Crocante Philadelfia - 4 peças",
+        "descricao": "Pasta philadelfia, geleia de pimenta, raspa de limão siciliano",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010263/20230512221838_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Crocante Camarão - 4 peças",
+        "descricao": "Camarão, cream cheese, geleia de pimenta, raspa de limão siciliano",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010262/20230512222012_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Atum com Ampola - 2 peças",
+        "descricao": "Arroz, atum, ampola com molho ponzu",
+        "preco": "R$ 10,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010286/20230315215158_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Camarão e Palha de Batata Baroa - 2 peças",
+        "descricao": "Arroz, camarão, palha de batata baroa cream cheese",
+        "preco": "R$ 10,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010285/20230315221312_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Camarão - 2 peças",
+        "descricao": "Camrão, arroz",
+        "preco": "R$ 10,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010273/20230316194745_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Camarão Invertido com Ovas - 2 peças",
+        "descricao": "Arroz, camarão invertido, cream cheese, ovas de massago",
+        "preco": "R$ 10,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010284/20230315222448_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Camarão Empanado - 2 peças",
+        "descricao": "Arroz,camarão empanado, molho chillimayo",
+        "preco": "R$ 10,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010272/20230316194613_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Salmão Brulée de Laranja - 2 peças",
+        "descricao": "Arroz, salmão caramelizado, gengibre, ampola com redução de laranja",
+        "preco": "R$ 10,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010283/20230315223016_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi de Salmão Trufado com Ampola - 2 peças",
+        "descricao": "Sushi de salmão maçaricado, flor de sal, raspa de limão siciliano, ampola gourmet com azeite trufado",
+        "preco": "R$ 10,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010282/20230315215457_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Especial com Palha de Batata Roxa - 4 peças",
+        "descricao": "Salmão, arroz, cream cheese, palha de batata roxa",
+        "preco": "R$ 20,89",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010277/20230315222850_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Salmão com Palha de Alho Poró - 4 peças",
+        "descricao": "Arroz, salmão, cream cheese, palha de alho poró",
+        "preco": "R$ 20,89",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010275/20230315223234_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Burguer de Salmão Cru - 1 un",
+        "descricao": "Arroz empanado, recheio de salmão maçaricado, cream cheese, cebolinha, gergelim, frito",
+        "preco": "R$ 30,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010159/20230512233340_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sushi Burguer de Salmão Maçaricado - 1 un",
+        "descricao": "Arroz empanado, recheio de salmão maçaricado, cream cheese, cebolinha, gergelim",
+        "preco": "R$ 34,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010158/20230512233405_Easy-Resize.webp"
+      }
+    ],
+    "Uramaki": [
+      {
+        "nome": "Uramaki Skin - 5 peças",
+        "descricao": "Arroz, pele de salmão frita",
+        "preco": "R$ 6,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010190/20230321154819_Easy-Resize.webp"
+      },
+      {
+        "nome": "Uramaki Boston - -5 peças",
+        "descricao": "Pasta de atum, cream cheese, tempero especias",
+        "preco": "R$ 6,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010189/20230321154957_Easy-Resize.webp"
+      },
+      {
+        "nome": "Uramaki Califórnia - 5 peças",
+        "descricao": "Arroz, kani, manga, pepino",
+        "preco": "R$ 6,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010188/20230321155046_Easy-Resize.webp"
+      },
+      {
+        "nome": "Uramaki Tuna - 5 peças",
+        "descricao": "Arroz, atum",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010187/20230321155133_Easy-Resize.webp"
+      },
+      {
+        "nome": "Uramaki Philadelfia - 5 peças",
+        "descricao": "Arroz, salmão, cream cheese",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010186/20230321155216_Easy-Resize.webp"
+      },
+      {
+        "nome": "Uramaki Ebi -5 peças",
+        "descricao": "Invertido de camarão. cream cheese",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010184/20230321160032_Easy-Resize.webp"
+      },
+      {
+        "nome": "Uramaki Premium com Geleia de Pimenta - 4 peças",
+        "descricao": "Salmão, cream cheese, geleia de pimenta, camarão, arroz, raspa de limão siciliano",
+        "preco": "R$ 17,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343411/photo1712104183.jpeg.webp"
+      },
+      {
+        "nome": "Uramaki Salmão com Alho Poró - 4 peças",
+        "descricao": "Uramaki Salmão com Alho Poró - 4 peças",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343409/photo1712104062.jpeg.webp"
+      },
+      {
+        "nome": "Uramaki Philadelfia com Ovas - 4 peças",
+        "descricao": "Arroz, cream cheese, salmão, ovas",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343408/photo1712103972.jpeg.webp"
+      },
+      {
+        "nome": "Uramaki Philadelfia Premium com Ampola - 4 peças",
+        "descricao": "Arroz, salmão, cream cheese, raspa de limão siciliano, gergelim, ampola com molho ponzu",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343407/photo1712103878.jpeg.webp"
+      },
+      {
+        "nome": "Uramaki Ebi Premium com Ampola - 4 peças",
+        "descricao": "Camarão, salmão, raspa de limão siciliano, gergelim, molho ponzu na ampola",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343406/photo1712103811.jpeg.webp"
+      },
+      {
+        "nome": "Uramaki Philadelfia Brulée Laranja - 4 peças",
+        "descricao": "Arroz, salmão caramelizado, cream cheese, ampola com molho laranja",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343405/photo1712103723.jpeg.webp"
+      },
+      {
+        "nome": "Uramaki Ebi com Ovas - 4 peças",
+        "descricao": "Arroz, cream cheese, camarão e ovas",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343404/photo1712103149.jpeg.webp"
+      },
+      {
+        "nome": "Uramaki Ebi Especial - 4 peças",
+        "descricao": "Invertido de arroz, cream cheese, gergelim com salmão por cima levemente grelhado, recheio de camarão",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343402/photo1712103036.jpeg.webp"
+      },
+      {
+        "nome": "Uramaki de Salmão e Trufa Negra Autêntica - 4 peças",
+        "descricao": "Arroz, salmão, cream cheese, trufa negra autêntica",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2343401/photo1712102909.jpeg.webp"
+      }
+    ],
+    "Especiais": [
+      {
+        "nome": "Trouxinha de Camarão",
+        "descricao": "Camarão, cream cheese, cebolinha",
+        "preco": "R$ 7,49",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010337/20230512201200_Easy-Resize.webp"
+      },
+      {
+        "nome": "Tiras de Peixe Empanado - 5 peças",
+        "descricao": "Tiras de peixe branco empanado na panko, temperado com ingredientes especiais, acompanha molho chilimayo",
+        "preco": "R$ 17,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010331/20230512202009_Easy-Resize.webp"
+      },
+      {
+        "nome": "Ceviche",
+        "descricao": "Mix de peixes da casa (Salmão, Atum e Peixe branco) | Cebola roxa | Pimenta togarashi | Pimenta biquinho | Molho cítrico | Coentro | Azeite",
+        "preco": "R$ 24,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010329/20230512202055_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sunomono",
+        "descricao": "Salada de pepino, kani, gergelim, tempero especial",
+        "preco": "R$ 16,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010317/20230512205407_Easy-Resize.webp"
+      },
+      {
+        "nome": "Sunomono Especial",
+        "descricao": "Salada de pepino, kani, salmão, gergelim, tempero especial",
+        "preco": "R$ 21,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010313/20230512205826_Easy-Resize.webp"
+      },
+      {
+        "nome": "Ussuzukuri Peixe Branco e Ovas - 5 peças",
+        "descricao": "Lmainas de peixe branco, flor de sal, cream cheese, ovas, azeite trufado, cebolinha",
+        "preco": "R$ 17,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010311/20230512210613_Easy-Resize.webp"
+      },
+      {
+        "nome": "Ussuzukuri de Salmão Trufado - 5 peças",
+        "descricao": "Lâminas de salmão, azeite trufado, flor de sal, raspas de limão siciliano",
+        "preco": "R$ 19,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010310/20230512210727_Easy-Resize.webp"
+      },
+      {
+        "nome": "Ussuzukuri de Salmão com Ovas - 5 peças",
+        "descricao": "Lâminas de salmão, azeite trufado, ovas massago, cream cheese, flor de sal",
+        "preco": "R$ 20,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010306/20230512211200_Easy-Resize.webp"
+      },
+      {
+        "nome": "Ussuzukuri de Salmão Trufa Negra Autêntica - 5 peças",
+        "descricao": "Lamina de salmão, trufa negra autêntica, flor de sal, cream cheese",
+        "preco": "R$ 20,99",
+        "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010304/20230512211242_Easy-Resize.webp"
+      }
+    ]
+  },
+  "Especiais Premium": [
+    {
+      "nome": "Super Camarão Empanado - 5 peças",
+      "descricao": "Camarões empanados na panko, acomapanha molho chilimayo",
+      "preco": "R$ 20,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010327/20230512203308_Easy-Resize.webp"
+    },
+    {
+      "nome": "Bob Marley Croc - 4 peças",
+      "descricao": "- Kani desfiado e frito, salmão, arroz, cream cheese",
+      "preco": "R$ 16,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010219/20230316214839_Easy-Resize.webp"
+    }
+  ],
+  "Sobremesas": [
+    {
+      "nome": "Banana Empanada com Doce de Leite (6 peças)",
+      "descricao": "Saboreie o melhor da culinária local.",
+      "preco": "R$ 8,49",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2039872/photo1690653683.jpeg.webp"
+    },
+    {
+      "nome": "Banana Empanada com Nutella (6 peças)",
+      "descricao": "Saboreie nossa irresistível combinação de banana c/ nutella!",
+      "preco": "R$ 9,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2039873/photo1690653739.jpeg.webp"
+    }
+  ],
+  "Bebidas": [
+    {
+      "nome": "Coca-cola Zero",
+      "descricao": "350ml",
+      "preco": "R$ 5,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010152/20220203205437__1__Easy-Resize.webp"
+    },
+    {
+      "nome": "Coca-cola",
+      "descricao": "350ml",
+      "preco": "R$ 5,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010151/20220203205437_Easy-Resize.webp"
+    },
+    {
+      "nome": "Guaraná Antarctica",
+      "descricao": "350ml",
+      "preco": "R$ 5,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010145/20220203205957_Easy-Resize.webp"
+    },
+    {
+      "nome": "Guaraviton",
+      "descricao": "500ml",
+      "preco": "R$ 5,99",
+      "imagem": "https://cdn.neemo.com.br/uploads/item/photo/2010140/20220203210145_Easy-Resize.webp"
+    }
+  ]
+}
