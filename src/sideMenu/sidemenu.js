@@ -25,9 +25,6 @@ const SidebarMenu = ({onSelect}) => {
         <Menu.Item onClick={() => onSelect("products")} key="produtos" icon={<ShoppingOutlined />}>
           Produtos
         </Menu.Item>
-        <Menu.Item onClick={() => onSelect("order")} key="pedidos" icon={<FileTextOutlined />}>
-          Pedidos
-        </Menu.Item>
       </Menu>
     </div>
   );

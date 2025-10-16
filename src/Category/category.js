@@ -1,181 +1,211 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Table, Input, Button, Form, Select, Card, Space, Popconfirm, Typography, Divider, Collapse } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+
+const { Option } = Select;
+const { Title } = Typography;
+const { Panel } = Collapse;
 
 const API_CATEGORIAS = "https://restaurant-sw98.onrender.com/categoriassub";
 
 const CategoryCRUD = () => {
   const [categorias, setCategorias] = useState([]);
-  const [nomeCategoria, setNomeCategoria] = useState('');
-  const [nomeSubcategoria, setNomeSubcategoria] = useState('');
-  const [editandoCatId, setEditandoCatId] = useState(null);
-  const [editandoSubId, setEditandoSubId] = useState(null);
-  const [subCategoriaPai, setSubCategoriaPai] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Buscar categorias e subcategorias
-  useEffect(() => {
+  const [formCat] = Form.useForm();
+  const [formSub] = Form.useForm();
+  const [editandoCat, setEditandoCat] = useState(null);
+  const [editandoSub, setEditandoSub] = useState(null);
+
+  const formCatRef = useRef(null);
+  const formSubRef = useRef(null);
+
+  const fetchCategorias = () => {
+    setLoading(true);
     fetch(API_CATEGORIAS)
       .then(res => res.json())
       .then(data => setCategorias(data))
-      .catch(err => console.error(err));
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchCategorias();
   }, []);
 
-  // Salvar categoria
-  const salvarCategoria = () => {
-    if (!nomeCategoria.trim()) return;
-
-    const metodo = editandoCatId ? 'PUT' : 'POST';
-    const url = editandoCatId ? `${API_CATEGORIAS}/categoria/${editandoCatId}` : `${API_CATEGORIAS}/categoria`;
+  const salvarCategoria = (values) => {
+    const metodo = editandoCat ? 'PUT' : 'POST';
+    const url = editandoCat ? `${API_CATEGORIAS}/categoria/${editandoCat.ID}` : `${API_CATEGORIAS}/categoria`;
 
     fetch(url, {
       method: metodo,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome: nomeCategoria }),
+      body: JSON.stringify({ nome: values.nome }),
     })
       .then(res => res.json())
-      .then(data => {
-        if (editandoCatId) {
-          setCategorias(categorias.map(cat => cat.ID === editandoCatId ? { ...cat, Nome: nomeCategoria } : cat));
-        } else {
-          setCategorias([...categorias, { ...data, Subcategorias: [] }]);
-        }
-        setNomeCategoria('');
-        setEditandoCatId(null);
+      .then(() => {
+        formCat.resetFields();
+        setEditandoCat(null);
+        fetchCategorias();
       });
   };
 
-  // Remover categoria
-  const removerCategoria = (id) => {
-    fetch(`${API_CATEGORIAS}/categoria/${id}`, { method: 'DELETE' })
-      .then(() => setCategorias(categorias.filter(c => c.ID !== id)));
-  };
-
-  // Editar categoria
-  const editarCategoria = (cat) => {
-    setNomeCategoria(cat.Nome);
-    setEditandoCatId(cat.ID);
-  };
-
-  // Salvar subcategoria
-  const salvarSubcategoria = () => {
-    if (!nomeSubcategoria.trim() || !subCategoriaPai) return;
-
-    const metodo = editandoSubId ? 'PUT' : 'POST';
-    const url = editandoSubId 
-      ? `${API_CATEGORIAS}/subcategoria/${editandoSubId}` 
+  const salvarSubcategoria = (values) => {
+    const metodo = editandoSub ? 'PUT' : 'POST';
+    const url = editandoSub
+      ? `${API_CATEGORIAS}/subcategoria/${editandoSub.ID}`
       : `${API_CATEGORIAS}/subcategoria`;
 
     fetch(url, {
       method: metodo,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome: nomeSubcategoria, CategoriaID: parseInt(subCategoriaPai) }),
+      body: JSON.stringify({ nome: values.nome, CategoriaID: parseInt(values.categoria) }),
     })
       .then(res => res.json())
-      .then(data => {
-        setCategorias(categorias.map(cat => {
-          if (cat.ID === data.CategoriaID) {
-            if (editandoSubId) {
-              cat.Subcategorias = cat.Subcategorias.map(sub => sub.ID === editandoSubId ? { ...sub, Nome: nomeSubcategoria } : sub);
-            } else {
-              cat.Subcategorias.push(data);
-            }
-          }
-          return cat;
-        }));
-        setNomeSubcategoria('');
-        setEditandoSubId(null);
-        setSubCategoriaPai('');
-      });
-  };
-
-  // Remover subcategoria
-  const removerSubcategoria = (catId, subId) => {
-    fetch(`${API_CATEGORIAS}/subcategoria/${subId}`, { method: 'DELETE' })
       .then(() => {
-        setCategorias(categorias.map(cat => {
-          if (cat.ID === catId) {
-            cat.Subcategorias = cat.Subcategorias.filter(sub => sub.ID !== subId);
-          }
-          return cat;
-        }));
+        formSub.resetFields();
+        setEditandoSub(null);
+        fetchCategorias();
       });
   };
 
-  // Editar subcategoria
-  const editarSubcategoria = (sub) => {
-    setNomeSubcategoria(sub.Nome);
-    setEditandoSubId(sub.ID);
-    setSubCategoriaPai(sub.CategoriaID.toString());
+  const removerCategoria = (id) => {
+    fetch(`${API_CATEGORIAS}/categoria/${id}`, { method: 'DELETE' })
+      .then(() => fetchCategorias());
   };
+
+  const removerSubcategoria = (id) => {
+    fetch(`${API_CATEGORIAS}/subcategoria/${id}`, { method: 'DELETE' })
+      .then(() => fetchCategorias());
+  };
+
+  const handleEditarCategoria = (record) => {
+    setEditandoCat(record);
+    formCat.setFieldsValue({ nome: record.Nome });
+    formCatRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleEditarSubcategoria = (record) => {
+    setEditandoSub(record);
+    formSub.setFieldsValue({ nome: record.Nome, categoria: record.CategoriaID.toString() });
+    formSubRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const columnsCategoria = [
+    { title: 'Categoria', dataIndex: 'Nome', key: 'Nome' },
+    {
+      title: 'Ações',
+      key: 'acoes',
+      render: (_, record) => (
+        <Space>
+          <Button icon={<EditOutlined />} onClick={() => handleEditarCategoria(record)} />
+          <Popconfirm title="Remover categoria?" onConfirm={() => removerCategoria(record.ID)}>
+            <Button danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </Space>
+      )
+    }
+  ];
+
+  const columnsSubcategoria = [
+    { title: 'Subcategoria', dataIndex: 'Nome', key: 'Nome' },
+    {
+      title: 'Categoria Pai',
+      dataIndex: 'CategoriaID',
+      key: 'CategoriaID',
+      render: (catId) => {
+        const cat = categorias.find(c => c.ID === catId);
+        return cat ? cat.Nome : '-';
+      }
+    },
+    {
+      title: 'Ações',
+      key: 'acoes',
+      render: (_, record) => (
+        <Space>
+          <Button icon={<EditOutlined />} onClick={() => handleEditarSubcategoria(record)} />
+          <Popconfirm title="Remover subcategoria?" onConfirm={() => removerSubcategoria(record.ID)}>
+            <Button danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </Space>
+      )
+    }
+  ];
+
+  const subcategoriasFlat = categorias.flatMap(cat => cat.Subcategorias.map(sub => ({ ...sub })));
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Categorias e Subcategorias</h2>
+      <Title level={2}>Edição de Categorias e Subcategorias</Title>
 
       {/* Form Categoria */}
-      <div className="flex gap-2 mb-6">
-        <input
-          value={nomeCategoria}
-          onChange={e => setNomeCategoria(e.target.value)}
-          placeholder="Nome da categoria"
-          className="border p-2 rounded w-full"
-        />
-        <button
-          onClick={salvarCategoria}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          {editandoCatId ? 'Atualizar' : 'Adicionar'}
-        </button>
+      <div ref={formCatRef}>
+        <Card title={editandoCat ? "Editar Categoria" : "Adicionar Categoria"} style={{ marginBottom: 24 }}>
+          <Form form={formCat} layout="inline" onFinish={salvarCategoria}>
+            <Form.Item name="nome" rules={[{ required: true, message: 'Informe o nome' }]}>
+              <Input placeholder="Nome da categoria" />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" icon={<PlusOutlined />}>
+                {editandoCat ? "Atualizar" : "Adicionar"}
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
       </div>
 
       {/* Form Subcategoria */}
-      <div className="flex gap-2 mb-6">
-        <select 
-          value={subCategoriaPai} 
-          onChange={e => setSubCategoriaPai(e.target.value)} 
-          className="border p-2 rounded w-1/3"
-        >
-          <option value="">Selecione a categoria</option>
-          {categorias.map(cat => <option key={cat.ID} value={cat.ID}>{cat.Nome}</option>)}
-        </select>
-        <input
-          value={nomeSubcategoria}
-          onChange={e => setNomeSubcategoria(e.target.value)}
-          placeholder="Nome da subcategoria"
-          className="border p-2 rounded w-2/3"
-        />
-        <button
-          onClick={salvarSubcategoria}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          {editandoSubId ? 'Atualizar' : 'Adicionar'}
-        </button>
+      <div ref={formSubRef}>
+        <Card title={editandoSub ? "Editar Subcategoria" : "Adicionar Subcategoria"} style={{ marginBottom: 24 }}>
+          <Form form={formSub} layout="inline" onFinish={salvarSubcategoria}>
+            <Form.Item name="categoria" rules={[{ required: true, message: 'Selecione a categoria' }]}>
+              <Select placeholder="Categoria">
+                {categorias.map(cat => (
+                  <Option key={cat.ID} value={cat.ID.toString()}>{cat.Nome}</Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item name="nome" rules={[{ required: true, message: 'Informe o nome' }]}>
+              <Input placeholder="Nome da subcategoria" />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" icon={<PlusOutlined />}>
+                {editandoSub ? "Atualizar" : "Adicionar"}
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
       </div>
 
-      {/* Listagem */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {categorias.map(cat => (
-          <div key={cat.ID} className="bg-white shadow-md p-4 rounded-lg border">
-            <h3 className="text-lg font-semibold flex justify-between items-center">
-              {cat.Nome}
-              <div>
-                <button onClick={() => editarCategoria(cat)} className="text-blue-600 mr-2 hover:underline">Editar</button>
-                <button onClick={() => removerCategoria(cat.ID)} className="text-red-600 hover:underline">Remover</button>
-              </div>
-            </h3>
+      <Divider />
 
-            <ul className="mt-2 ml-4">
-              {cat.Subcategorias.map(sub => (
-                <li key={sub.ID} className="flex justify-between items-center mt-1">
-                  {sub.Nome}
-                  <div>
-                    <button onClick={() => editarSubcategoria(sub)} className="text-blue-600 mr-2 hover:underline">Editar</button>
-                    <button onClick={() => removerSubcategoria(cat.ID, sub.ID)} className="text-red-600 hover:underline">Remover</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      {/* Collapse Categorias */}
+      <Collapse accordion>
+        <Panel header="Categorias" key="categorias">
+          <Table
+            dataSource={categorias}
+            columns={columnsCategoria}
+            rowKey="ID"
+            loading={loading}
+            pagination={false}
+          />
+        </Panel>
+      </Collapse>
+
+      <Divider />
+
+      {/* Collapse Subcategorias */}
+      <Collapse accordion>
+        <Panel header="Subcategorias" key="subcategorias">
+          <Table
+            dataSource={subcategoriasFlat}
+            columns={columnsSubcategoria}
+            rowKey="ID"
+            loading={loading}
+            pagination={false}
+          />
+        </Panel>
+      </Collapse>
     </div>
   );
 };
