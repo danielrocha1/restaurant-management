@@ -34,6 +34,8 @@ const API_CATEGORIAS = "https://restaurant-sw98.onrender.com/categoriassub";
  * - Desabilita botões durante operações
  * - Melhora validações do form
  */
+
+
 export default function CategoryCollapse() {
   const [categorias, setCategorias] = useState([]);
   const [produtos, setProdutos] = useState({}); // { "Combinados": [ ... ] }
@@ -61,6 +63,10 @@ export default function CategoryCollapse() {
         message.error("Erro ao buscar categorias");
       });
   }, []);
+
+   useEffect(() => {
+    console.log(categorias)
+  }, [categorias]);
 
   // fetchProdutos — busca e popula produtos[categoriaOuSub]
   const fetchProdutos = async (categoriaOuSub) => {

@@ -209,6 +209,12 @@ const TableGrid = () => {
     fetchTables();
   }, []);
 
+   useEffect(() => {
+    console.log(tables)
+    
+  }, [tables]);
+
+
   const handleTableClick = async (table) => {
     setLoadingTable(table.id);
      const url = "https://restaurant-sw98.onrender.com/tables/view";

@@ -4,7 +4,6 @@ import Sidebar from './sideMenu/sidemenu';
 import Category from './Category/category';
 import Product from './Product/product';
 import TableGrid from './tables/tableGrid/tablegrid';
-import Order from './Order/order';
 
 function App() {
   const [selected, setSelected] = useState('Category');
@@ -13,9 +12,7 @@ function App() {
     switch (selected) {
       case 'products':
         return <Product />;
-      case 'order':
-        return <Order />;
-        case 'tables':
+      case 'tables':
         return <TableGrid />;
       default:
         return <Category />;

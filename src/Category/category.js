@@ -1,90 +1,178 @@
 import React, { useEffect, useState } from 'react';
 
-const API_URL = 'https://restaurant-sw98.onrender.com/categorias';
+const API_CATEGORIAS = "https://restaurant-sw98.onrender.com/categoriassub";
 
-const Category = () => {
+const CategoryCRUD = () => {
   const [categorias, setCategorias] = useState([]);
-  const [nome, setNome] = useState('');
-  const [editandoId, setEditandoId] = useState(null);
+  const [nomeCategoria, setNomeCategoria] = useState('');
+  const [nomeSubcategoria, setNomeSubcategoria] = useState('');
+  const [editandoCatId, setEditandoCatId] = useState(null);
+  const [editandoSubId, setEditandoSubId] = useState(null);
+  const [subCategoriaPai, setSubCategoriaPai] = useState('');
 
+  // Buscar categorias e subcategorias
   useEffect(() => {
-    fetch(API_URL)
+    fetch(API_CATEGORIAS)
       .then(res => res.json())
       .then(data => setCategorias(data))
-      .catch(err => console.error('Erro ao buscar categorias:', err));
+      .catch(err => console.error(err));
   }, []);
 
-  const salvar = () => {
-    if (!nome.trim()) return;
+  // Salvar categoria
+  const salvarCategoria = () => {
+    if (!nomeCategoria.trim()) return;
 
-    const metodo = editandoId ? 'PUT' : 'POST';
-    const url = editandoId ? `${API_URL}/${editandoId}` : API_URL;
+    const metodo = editandoCatId ? 'PUT' : 'POST';
+    const url = editandoCatId ? `${API_CATEGORIAS}/categoria/${editandoCatId}` : `${API_CATEGORIAS}/categoria`;
 
     fetch(url, {
       method: metodo,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome }),
+      body: JSON.stringify({ nome: nomeCategoria }),
     })
       .then(res => res.json())
       .then(data => {
-        if (editandoId) {
-          setCategorias(categorias.map(cat => cat.ID === editandoId ? { ...cat, Nome: nome } : cat));
+        if (editandoCatId) {
+          setCategorias(categorias.map(cat => cat.ID === editandoCatId ? { ...cat, Nome: nomeCategoria } : cat));
         } else {
-          setCategorias([...categorias, data]);
+          setCategorias([...categorias, { ...data, Subcategorias: [] }]);
         }
-        setNome('');
-        setEditandoId(null);
+        setNomeCategoria('');
+        setEditandoCatId(null);
       });
   };
 
-  const remover = (id) => {
-    fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+  // Remover categoria
+  const removerCategoria = (id) => {
+    fetch(`${API_CATEGORIAS}/categoria/${id}`, { method: 'DELETE' })
+      .then(() => setCategorias(categorias.filter(c => c.ID !== id)));
+  };
+
+  // Editar categoria
+  const editarCategoria = (cat) => {
+    setNomeCategoria(cat.Nome);
+    setEditandoCatId(cat.ID);
+  };
+
+  // Salvar subcategoria
+  const salvarSubcategoria = () => {
+    if (!nomeSubcategoria.trim() || !subCategoriaPai) return;
+
+    const metodo = editandoSubId ? 'PUT' : 'POST';
+    const url = editandoSubId 
+      ? `${API_CATEGORIAS}/subcategoria/${editandoSubId}` 
+      : `${API_CATEGORIAS}/subcategoria`;
+
+    fetch(url, {
+      method: metodo,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: nomeSubcategoria, CategoriaID: parseInt(subCategoriaPai) }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        setCategorias(categorias.map(cat => {
+          if (cat.ID === data.CategoriaID) {
+            if (editandoSubId) {
+              cat.Subcategorias = cat.Subcategorias.map(sub => sub.ID === editandoSubId ? { ...sub, Nome: nomeSubcategoria } : sub);
+            } else {
+              cat.Subcategorias.push(data);
+            }
+          }
+          return cat;
+        }));
+        setNomeSubcategoria('');
+        setEditandoSubId(null);
+        setSubCategoriaPai('');
+      });
+  };
+
+  // Remover subcategoria
+  const removerSubcategoria = (catId, subId) => {
+    fetch(`${API_CATEGORIAS}/subcategoria/${subId}`, { method: 'DELETE' })
       .then(() => {
-        setCategorias(categorias.filter(c => c.ID !== id));
+        setCategorias(categorias.map(cat => {
+          if (cat.ID === catId) {
+            cat.Subcategorias = cat.Subcategorias.filter(sub => sub.ID !== subId);
+          }
+          return cat;
+        }));
       });
   };
 
-  const editar = (cat) => {
-    setNome(cat.Nome);
-    setEditandoId(cat.ID);
+  // Editar subcategoria
+  const editarSubcategoria = (sub) => {
+    setNomeSubcategoria(sub.Nome);
+    setEditandoSubId(sub.ID);
+    setSubCategoriaPai(sub.CategoriaID.toString());
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Categorias</h2>
+    <div className="p-6 max-w-6xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Categorias e Subcategorias</h2>
+
+      {/* Form Categoria */}
       <div className="flex gap-2 mb-6">
         <input
-          value={nome}
-          onChange={e => setNome(e.target.value)}
+          value={nomeCategoria}
+          onChange={e => setNomeCategoria(e.target.value)}
           placeholder="Nome da categoria"
           className="border p-2 rounded w-full"
         />
         <button
-          onClick={salvar}
+          onClick={salvarCategoria}
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
         >
-          {editandoId ? 'Atualizar' : 'Adicionar'}
+          {editandoCatId ? 'Atualizar' : 'Adicionar'}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {/* Form Subcategoria */}
+      <div className="flex gap-2 mb-6">
+        <select 
+          value={subCategoriaPai} 
+          onChange={e => setSubCategoriaPai(e.target.value)} 
+          className="border p-2 rounded w-1/3"
+        >
+          <option value="">Selecione a categoria</option>
+          {categorias.map(cat => <option key={cat.ID} value={cat.ID}>{cat.Nome}</option>)}
+        </select>
+        <input
+          value={nomeSubcategoria}
+          onChange={e => setNomeSubcategoria(e.target.value)}
+          placeholder="Nome da subcategoria"
+          className="border p-2 rounded w-2/3"
+        />
+        <button
+          onClick={salvarSubcategoria}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          {editandoSubId ? 'Atualizar' : 'Adicionar'}
+        </button>
+      </div>
+
+      {/* Listagem */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {categorias.map(cat => (
           <div key={cat.ID} className="bg-white shadow-md p-4 rounded-lg border">
-            <h3 className="text-lg font-semibold">{cat.Nome}</h3>
-            <div className="mt-4 flex justify-between">
-              <button
-                onClick={() => editar(cat)}
-                className="text-blue-600 hover:underline"
-              >
-                Editar
-              </button>
-              <button
-                onClick={() => remover(cat.ID)}
-                className="text-red-600 hover:underline"
-              >
-                Remover
-              </button>
-            </div>
+            <h3 className="text-lg font-semibold flex justify-between items-center">
+              {cat.Nome}
+              <div>
+                <button onClick={() => editarCategoria(cat)} className="text-blue-600 mr-2 hover:underline">Editar</button>
+                <button onClick={() => removerCategoria(cat.ID)} className="text-red-600 hover:underline">Remover</button>
+              </div>
+            </h3>
+
+            <ul className="mt-2 ml-4">
+              {cat.Subcategorias.map(sub => (
+                <li key={sub.ID} className="flex justify-between items-center mt-1">
+                  {sub.Nome}
+                  <div>
+                    <button onClick={() => editarSubcategoria(sub)} className="text-blue-600 mr-2 hover:underline">Editar</button>
+                    <button onClick={() => removerSubcategoria(cat.ID, sub.ID)} className="text-red-600 hover:underline">Remover</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>
@@ -92,4 +180,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default CategoryCRUD;
