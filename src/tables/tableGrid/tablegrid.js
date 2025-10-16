@@ -193,7 +193,7 @@ const TableGrid = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const res = await fetch("http://localhost:4000/tables/isopen");
+        const res = await fetch("https://restaurant-sw98.onrender.com/tables/isopen");
         const data = await res.json();
         const mapped = data.map((t) => ({
           id: t.id,
@@ -211,7 +211,7 @@ const TableGrid = () => {
 
   const handleTableClick = async (table) => {
     setLoadingTable(table.id);
-     const url = "http://localhost:4000/tables/view";
+     const url = "https://restaurant-sw98.onrender.com/tables/view";
     const body = { number: table.id };
 
     try {

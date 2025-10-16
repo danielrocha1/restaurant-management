@@ -17,7 +17,7 @@ const Order = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:4000/orders");
+      const res = await fetch("https://restaurant-sw98.onrender.com/orders");
       const data = await res.json();
       setOrders(data);
     } catch (error) {
@@ -59,13 +59,13 @@ const Order = () => {
 
     try {
       if (editingId === null) {
-        await fetch("http://localhost:4000/orders", {
+        await fetch("https://restaurant-sw98.onrender.com/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
       } else {
-        await fetch(`http://localhost:4000/orders/${editingId}`, {
+        await fetch(`https://restaurant-sw98.onrender.com/orders/${editingId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -98,7 +98,7 @@ const Order = () => {
     };
 
     try {
-      await fetch(`http://localhost:4000/orders/${order.ID}`, {
+      await fetch(`https://restaurant-sw98.onrender.com/orders/${order.ID}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderPayload),
@@ -118,7 +118,7 @@ const Order = () => {
     if (!window.confirm("Confirma exclusão do pedido?")) return;
 
     try {
-      await fetch(`http://localhost:4000/orders/${id}`, {
+      await fetch(`https://restaurant-sw98.onrender.com/orders/${id}`, {
         method: "DELETE",
       });
       fetchOrders();

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const API_URL = 'http://localhost:4000/categorias';
+const API_URL = 'https://restaurant-sw98.onrender.com/categorias';
 
 const Category = () => {
   const [categorias, setCategorias] = useState([]);

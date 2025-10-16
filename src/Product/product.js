@@ -23,8 +23,8 @@ import { EditOutlined, DeleteOutlined, ReloadOutlined } from "@ant-design/icons"
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
-const API_PRODUTOS = "http://localhost:4000/produtos";
-const API_CATEGORIAS = "http://localhost:4000/categoriassub";
+const API_PRODUTOS = "https://restaurant-sw98.onrender.com/produtos";
+const API_CATEGORIAS = "https://restaurant-sw98.onrender.com/categoriassub";
 
 /**
  * CategoryCollapse — versão aprimorada
@@ -75,7 +75,7 @@ export default function CategoryCollapse() {
     setLoading(categoriaOuSub, true);
     try {
       const res = await fetch(
-        `http://localhost:4000/produtos-list?categoria=${encodeURIComponent(categoriaOuSub)}&page=1`
+        `https://restaurant-sw98.onrender.com/produtos-list?categoria=${encodeURIComponent(categoriaOuSub)}&page=1`
       );
       if (!res.ok) throw new Error("Resposta não OK");
       const data = await res.json();
