@@ -10,6 +10,7 @@ import DrawerOrderDetails from "./components/DrawerOrderDetails";
 // ==================== Componente Principal ====================
 const TableGrid = () => {
   const [tables, setTables] = useState([]);
+  const [tableID, setTableID] = useState([]);
   const [loadingTableId, setLoadingTableId] = useState(null);
   const [loadingTables, setLoadingTables] = useState(true);
 
@@ -44,6 +45,8 @@ const TableGrid = () => {
     fetchTables();
   }, []);
 
+ 
+
   const handleTableClick = async (table) => {
     setLoadingTableId(table.id);
     const url = "https://restaurant-sw98.onrender.com/tables/view";
@@ -57,6 +60,7 @@ const TableGrid = () => {
       });
       const data = await res.json();
       setSelectedOrders(data);
+      setTableID(table.id)
       setSelectedTableNumber(table.number);
       setDrawerTableVisible(true);
     } catch (err) {
@@ -101,6 +105,7 @@ return (
       {/* Os Drawers são mantidos, mas agora podem ser gerenciados pelo Contexto */}
       <DrawerTableOrders
         visible={drawerTableVisible}
+        tableID={tableID}
         orders={selectedOrders}
         tableNumber={selectedTableNumber}
         onClose={() => setDrawerTableVisible(false)} // Ou use uma função de contexto

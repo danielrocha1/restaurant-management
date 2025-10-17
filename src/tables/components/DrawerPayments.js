@@ -18,7 +18,11 @@ import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-// Lista de métodos de pagamento disponíveis (pode vir de uma API)
+// --- FUNÇÕES DE CONVERSÃO (Mantidas) ---
+const totalToCentavos = (value) => Math.round(value * 100);
+const totalToReais = (value) => value / 100;
+
+// --- MÉTODOS DE PAGAMENTO (Mantidos) ---
 const paymentMethods = [
   { value: "dinheiro", label: "Dinheiro" },
   { value: "cartao_debito", label: "Cartão de Débito" },
@@ -27,94 +31,134 @@ const paymentMethods = [
   { value: "vale_refeicao", label: "Vale Refeição" },
 ];
 
+const API_ENDPOINT = "https://restaurant-sw98.onrender.com/payment/"; // <<< NOVO: URL do seu endpoint Go
+
 const DrawerPayment = ({
+  tableID,
   visible,
   onClose,
-  totalToPay, // Valor total que veio do DrawerTableOrders
+  totalToPay,
   tableNumber,
-  onPaymentSuccess, // Função a ser chamada ao fechar a mesa
+  onPaymentSuccess,
 }) => {
-  // Estado para armazenar os pagamentos adicionados
+  const totalToPayCentavos = useMemo(() => totalToCentavos(totalToPay), [totalToPay]);
+  
   const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(false); // NOVO: Estado para controle de loading
   const [form] = Form.useForm();
 
-  // 1. Cálculo do Total Pago
-  const totalPaid = useMemo(() => {
+  // --- CÁLCULOS (Mantidos) ---
+  const totalPaidCentavos = useMemo(() => {
     return payments.reduce((sum, p) => sum + p.value, 0);
   }, [payments]);
 
-  // 2. Cálculo do Valor Faltante (ou Troco)
-  const remainingValue = useMemo(() => {
-    // Garantir precisão, evitando problemas de ponto flutuante, se necessário,
-    // mas o InputNumber com precisão 2 já ajuda.
-    return totalToPay - totalPaid;
-  }, [totalToPay, totalPaid]);
+  const remainingValueCentavos = useMemo(() => {
+    return totalToPayCentavos - totalPaidCentavos;
+  }, [totalToPayCentavos, totalPaidCentavos]);
 
-  const isComplete = remainingValue <= 0;
-  const isOverpaid = remainingValue < 0; // Se for negativo, significa que há troco ou pagamento em excesso
+  const isComplete = remainingValueCentavos <= 0;
+  const isOverpaid = remainingValueCentavos < 0;
+  // ... (handleRemovePayment e handleAddPayment são mantidos) ...
 
-  // 3. Função para adicionar um novo pagamento
   const handleAddPayment = (values) => {
+    const valueCentavos = totalToCentavos(values.value);
+
     const newPayment = {
-      id: Date.now(), // ID simples baseado no timestamp
+      id: Date.now(),
       method: values.method,
-      value: values.value,
+      value: valueCentavos,
       methodLabel: paymentMethods.find((m) => m.value === values.method)?.label || values.method,
     };
     setPayments([...payments, newPayment]);
-    form.resetFields(); // Limpa o formulário após adicionar
+    form.resetFields();
   };
 
-  // 4. Função para remover um pagamento
   const handleRemovePayment = (id) => {
     setPayments(payments.filter((p) => p.id !== id));
   };
-
-  // 5. Função para finalizar o pagamento (chamada pelo botão de fechar)
-  const handleFinalizePayment = () => {
+  
+  // 5. Função para finalizar o pagamento (AGORA COM FETCH)
+  const handleFinalizePayment = async () => {
     if (!isComplete) {
       message.warning("Ainda há um valor pendente para pagamento.");
       return;
     }
 
-    const troco = isOverpaid ? Math.abs(remainingValue) : 0;
+    setLoading(true); // Inicia o loading
 
-    // Objeto com todos os dados relevantes para o fechamento
+    const trocoCentavos = isOverpaid ? Math.abs(remainingValueCentavos) : 0;
+    const trocoReais = totalToReais(trocoCentavos);
+
+    // Estrutura de Pagamentos para a API
+    const paymentsForAPI = payments.map(p => ({
+        // O back-end em Go espera o formato original da nossa conversa:
+        id: p.id,
+        method: p.method,
+        methodLabel: p.methodLabel,
+        value: p.value, // Centavos (inteiro)
+        value_centavos: p.value,
+        value_reais: totalToReais(p.value),
+    }));
+    
+    // Objeto FINAL para o back-end (similar ao JSON que o handler Go espera)
     const paymentData = {
-      tableNumber: tableNumber,
-      totalToPay: totalToPay,
-      totalPaid: totalPaid,
-      payments: payments, // Array detalhado de métodos e valores
-      changeDue: troco.toFixed(2), // Troco calculado formatado
+      tableID: tableID, // Mantenho como number
+      tableNumber: tableNumber, // Mantenho como number
+      totalPaid: totalPaidCentavos, // Total pago em Reais para consistência com o seu modelo
+      payments: paymentsForAPI, 
+      changeDue: trocoReais.toFixed(2),
+      totalTransaction: totalToPayCentavos,
     };
 
-    // CAPTURA DOS DADOS FINALIZADOS NO CONSOLE.LOG
-    console.log("--- Dados Finais do Pagamento (Mesa Fechada) ---");
-    console.log(paymentData);
-    console.log("-------------------------------------------------");
-    
-    // Simula o sucesso e o envio ao servidor
-    message.success(
-      `Mesa ${tableNumber} fechada com sucesso! Pagamento de R$ ${totalPaid.toFixed(
-        2
-      )} processado.`
-    );
-    
-    // Resetar o estado e fechar o drawer
-    setPayments([]);
-    onClose();
-    if (onPaymentSuccess) {
-        onPaymentSuccess();
+    try {
+      // ------------------------------------------------
+      // INÍCIO DA CHAMADA FETCH (POST)
+      // ------------------------------------------------
+      const response = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Authorization': 'Bearer ' + seuTokenDeSessao, // Se necessário
+        },
+        body: JSON.stringify(paymentData),
+      });
+
+      const result = await response.json();
+      console.log(paymentData)
+      
+      if (!response.ok) {
+        // Se a resposta HTTP não for 2xx (ex: 400 Bad Request)
+        console.log(paymentData)
+        throw new Error(result.message || result.error || "Erro ao processar pagamento no servidor.");
+      }
+
+      // Sucesso
+      message.success(result.message || 
+        `Mesa ${tableNumber} fechada! Pago: R$ ${totalToReais(totalPaidCentavos).toFixed(2)}.`
+      );
+      
+      // Resetar e fechar
+      setPayments([]);
+      onClose();
+      if (onPaymentSuccess) {
+          onPaymentSuccess();
+      }
+
+    } catch (error) {
+      console.error("Erro na transação de pagamento:", error);
+      message.error(`Falha ao fechar mesa: ${error.message}`);
+    } finally {
+      setLoading(false); // Finaliza o loading
     }
   };
 
-  // Renderização do troco
+  // Renderização do troco (mantida)
   const renderTroco = () => {
       if (isOverpaid) {
-          const troco = Math.abs(remainingValue);
+          const trocoReais = totalToReais(Math.abs(remainingValueCentavos));
           return (
               <Alert
-                  message={`Troco: R$ ${troco.toFixed(2)}`}
+                  message={`Troco: R$ ${trocoReais.toFixed(2)}`}
                   type="success"
                   showIcon
                   style={{ marginBottom: 12 }}
@@ -123,15 +167,21 @@ const DrawerPayment = ({
       }
       return null;
   };
+  
+  // Sugere o valor restante (em Reais)
+  const suggestedRemainingReais = remainingValueCentavos > 0
+    ? totalToReais(remainingValueCentavos)
+    : 0.00; // Se já pagou o suficiente, sugere 0.00
 
   return (
     <Drawer
       title={<Title level={4}>Pagamento da Mesa {tableNumber}</Title>}
-      width={450} // Um pouco mais estreito que o Drawer de pedidos
+      width={450}
       placement="right"
       onClose={onClose}
       open={visible}
       footer={
+        // ... (Footer com cálculos e botões)
         <div
           style={{
             display: "flex",
@@ -140,14 +190,15 @@ const DrawerPayment = ({
             padding: "8px 0",
           }}
         >
+          {/* ... Display de Totais (Mantido) ... */}
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Text>Total a Pagar:</Text>
-            <Text strong>R$ {totalToPay.toFixed(2)}</Text>
+            <Text strong>R$ {totalToReais(totalToPayCentavos).toFixed(2)}</Text>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Text>Total Pago:</Text>
             <Text strong style={{ color: "green" }}>
-              R$ {totalPaid.toFixed(2)}
+              R$ {totalToReais(totalPaidCentavos).toFixed(2)}
             </Text>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -156,10 +207,10 @@ const DrawerPayment = ({
               strong
               style={{
                 fontSize: 18,
-                color: remainingValue > 0 ? "red" : "green",
+                color: remainingValueCentavos > 0 ? "red" : "green",
               }}
             >
-              R$ {Math.abs(remainingValue).toFixed(2)}
+              R$ {totalToReais(Math.abs(remainingValueCentavos)).toFixed(2)}
             </Text>
           </div>
 
@@ -170,13 +221,15 @@ const DrawerPayment = ({
             size="large"
             block
             onClick={handleFinalizePayment}
-            disabled={!isComplete} // Habilita somente se o pagamento estiver completo
+            disabled={!isComplete || loading} // Desabilita se não estiver completo ou estiver carregando
+            loading={loading} // Exibe o spinner de loading
           >
             Finalizar Pagamento e Fechar Mesa
           </Button>
         </div>
       }
     >
+      {/* ... (Corpo do Drawer: Adicionar Pagamento e Pagamentos Lançados - Mantido) ... */}
       <Title level={5}>Adicionar Pagamento</Title>
       <Form
         form={form}
@@ -203,7 +256,7 @@ const DrawerPayment = ({
             name="value"
             label="Valor (R$)"
             rules={[{ required: true, message: "Digite o valor!" }]}
-            initialValue={remainingValue > 0 ? remainingValue : totalToPay > 0 ? totalToPay : 0.00} // Sugere o valor faltante (ou o total se for o primeiro pagamento)
+            initialValue={suggestedRemainingReais}
             style={{ flex: 1, marginRight: 8 }}
           >
             <InputNumber
@@ -239,7 +292,7 @@ const DrawerPayment = ({
             >
               <Text strong>{p.methodLabel}</Text>
               <Space>
-                <Text>R$ {p.value.toFixed(2)}</Text>
+                <Text>R$ {totalToReais(p.value).toFixed(2)}</Text>
                 <Button
                   danger
                   type="text"

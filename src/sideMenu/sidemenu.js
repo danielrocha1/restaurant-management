@@ -25,6 +25,9 @@ const SidebarMenu = ({onSelect}) => {
         <Menu.Item onClick={() => onSelect("products")} key="produtos" icon={<ShoppingOutlined />}>
           Produtos
         </Menu.Item>
+        <Menu.Item onClick={() => onSelect("payments")} key="payments" icon={<ShoppingOutlined />}>
+          Pagamentos
+        </Menu.Item>
       </Menu>
     </div>
   );

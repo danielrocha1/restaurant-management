@@ -4,6 +4,7 @@ import Sidebar from './sideMenu/sidemenu';
 import Category from './Category/category';
 import Product from './Product/product';
 import TableGrid from './tables/tablegrid';
+import TransactionsPage from './Payments/payments';
 
 function App() {
   const [selected, setSelected] = useState('Category');
@@ -14,6 +15,8 @@ function App() {
         return <Product />;
       case 'tables':
         return <TableGrid />;
+      case 'payments':
+        return <TransactionsPage />;
       default:
         return <Category />;
     }

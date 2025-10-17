@@ -10,9 +10,10 @@ const DrawerTableOrders = ({
   visible,
   onClose,
   orders,
-  onSelectOrder,
+  tableID,
+  onSelectOrder, //TEM QUE PEGAR TABLE.ID PARA SALVAR NO PAGAMENTO
   tableNumber,
-  onTableClosed, // CORREÇÃO 1: Adicionada a prop onTableClosed
+  onTableClosed,  
 }) => {
   // CORREÇÃO 2: Declaração do estado para o Drawer de Pagamento
   const [paymentDrawerVisible, setPaymentDrawerVisible] = useState(false);
@@ -117,6 +118,7 @@ const DrawerTableOrders = ({
 
       {/* DRAWER DE PAGAMENTO */}
       <DrawerPayment
+        tableID={tableID}
         visible={paymentDrawerVisible}
         onClose={handlePaymentDrawerClose}
         totalToPay={totalGeral}
