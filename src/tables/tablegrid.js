@@ -70,18 +70,25 @@ const TableGrid = () => {
     setSelectedOrder(order);
     setDrawerOrderVisible(true);
   };
-
-  return (
+return (
     <>
-      <Row gutter={[16, 16]}>
+      <Row gutter={[20, 20]} justify="start"> {/* Aumentamos o espaçamento (gutter) */}
+        {/* Usando o mesmo mapeamento de esqueleto para feedback de carregamento */}
         {loadingTables
-          ? Array.from({ length: 10 }).map((_, idx) => (
+          ? Array.from({ length: 15 }).map((_, idx) => ( // Aumentei para 15 esqueletos
               <Col key={idx}>
-                <Skeleton.Input style={{ width: 100, height: 100 }} active />
+                <Skeleton.Input 
+                    style={{ width: 120, height: 120, borderRadius: 12 }} // Estilo do esqueleto aprimorado
+                    active 
+                />
               </Col>
             ))
           : tables.map((table) => (
-              <Col key={table.id}>
+              <Col 
+                key={table.id}
+                // Adicionar uma chave de flex/responsividade se quiser quebrar a linha melhor
+                xs={12} sm={8} md={6} lg={4} xl={3}
+              >
                 <TableCard
                   table={table}
                   loading={loadingTableId === table.id}
@@ -91,18 +98,19 @@ const TableGrid = () => {
             ))}
       </Row>
 
+      {/* Os Drawers são mantidos, mas agora podem ser gerenciados pelo Contexto */}
       <DrawerTableOrders
         visible={drawerTableVisible}
         orders={selectedOrders}
         tableNumber={selectedTableNumber}
-        onClose={() => setDrawerTableVisible(false)}
-        onSelectOrder={handleOrderClick}
+        onClose={() => setDrawerTableVisible(false)} // Ou use uma função de contexto
+        onSelectOrder={handleOrderClick} // Ou use uma função de contexto
       />
 
       <DrawerOrderDetails
         visible={drawerOrderVisible}
         order={selectedOrder}
-        onClose={() => setDrawerOrderVisible(false)}
+        onClose={() => setDrawerOrderVisible(false)} // Ou use uma função de contexto
       />
     </>
   );
