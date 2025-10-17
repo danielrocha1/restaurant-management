@@ -49,7 +49,7 @@ export default function ClosedTablesPage() {
       setTables([]);
 
       try {
-        const res = await fetch("http://localhost:4000/tables/viewcloseondate", {
+        const res = await fetch("https://restaurant-sw98.onrender.com/tables/viewcloseondate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ date: date.format("YYYY-MM-DD") }),
@@ -80,7 +80,7 @@ export default function ClosedTablesPage() {
     setSelectedTable(null);
 
     try {
-      const res = await fetch(`http://localhost:4000/tables/viewclose`, {
+      const res = await fetch(`https://restaurant-sw98.onrender.com/tables/viewclose`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ID: id }), // envia o id no body
