@@ -347,7 +347,7 @@ export default function ClosedTablesPage() {
   
   return (
     <div style={{ padding: 20 }}>
-      <h2>Mesas Fechadas <TableOutlined /></h2>
+      <h2>Pagamentos Realizados <TableOutlined /></h2>
 
       <Space style={{ marginBottom: 16 }}>
         <DatePicker value={date} onChange={setDate} allowClear={false} />
