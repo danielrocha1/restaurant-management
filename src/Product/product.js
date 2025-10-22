@@ -158,7 +158,6 @@ export default function CategoryCollapse() {
             Preco: values.Preco != null ? Number(values.Preco * 100) : 0,
             PrecoPromocional: values.PrecoPromocional != null ? Number(values.PrecoPromocional * 100) : 0,
             Imagem: values.ImagemURL || "",
-            CategoriaID: categoriaSelecionada?.ID,
             SubcategoriaID: subSelecionada?.ID || null, // ✅ só o ID
             Active: editando.Active
         };
