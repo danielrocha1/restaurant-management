@@ -5,27 +5,32 @@ import {
   ShoppingOutlined,
   FileTextOutlined,
   BarsOutlined,
+  TableOutlined,
+  WalletOutlined,
 } from '@ant-design/icons';
 import './sidemenu.css';
 
-const SidebarMenu = ({onSelect}) => {
+const SidebarMenu = ({ onSelect }) => {
   return (
     <div className="sidebar-menu">
       <Menu
         mode="vertical"
-        defaultSelectedKeys={['categorias']}
+        defaultSelectedKeys={['categories']}
         style={{ borderRight: 0 }}
       >
-        <Menu.Item onClick={() => onSelect("tables")} key="mesas" icon={<BarsOutlined />}>
+        <Menu.Item onClick={() => onSelect("tables")} key="tables" icon={<TableOutlined />}>
           Mesas
         </Menu.Item>
-        <Menu.Item onClick={() => onSelect("Category")} key="categorias" icon={<AppstoreOutlined />}>
+
+        <Menu.Item onClick={() => onSelect("categories")} key="categories" icon={<AppstoreOutlined />}>
           Categorias
         </Menu.Item>
-        <Menu.Item onClick={() => onSelect("products")} key="produtos" icon={<ShoppingOutlined />}>
+
+        <Menu.Item onClick={() => onSelect("products")} key="products" icon={<ShoppingOutlined />}>
           Produtos
         </Menu.Item>
-        <Menu.Item onClick={() => onSelect("payments")} key="payments" icon={<ShoppingOutlined />}>
+
+        <Menu.Item onClick={() => onSelect("payments")} key="payments" icon={<WalletOutlined />}>
           Pagamentos
         </Menu.Item>
       </Menu>

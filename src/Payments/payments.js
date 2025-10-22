@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   DatePicker,
   Table,
@@ -16,6 +16,9 @@ import {
   Divider,
   Collapse,
   Spin,
+  Layout, 
+  Alert, 
+  Empty, 
 } from "antd";
 import {
   TableOutlined,
@@ -24,31 +27,58 @@ import {
   DollarCircleOutlined,
   InfoCircleOutlined,
   LoadingOutlined,
+  CalendarOutlined,
+  CheckCircleOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Formatação de moeda
+const { Content } = Layout;
+
+// Formatação de moeda (BRL)
 const currencyFormatter = (value) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
 // Conversor robusto de valores do backend -> número em reais
 const toReais = (raw) => {
   if (raw === null || raw === undefined) return 0;
-
-  if (typeof raw === "number" && Number.isFinite(raw)) {
-    return raw > 1000 ? raw / 100 : raw; // valores grandes assumem centavos
-  }
-
+  
   const s = String(raw).trim();
   if (s === "") return 0;
 
+  // 1. Tratamento de strings que JÁ SÃO Reais (ex: "2.04" ou "369.96000...")
   if (s.includes(".") || s.includes(",")) {
-    const f = parseFloat(s.replace(",", "."));
-    return Number.isFinite(f) ? f : 0;
+      const f = parseFloat(s.replace(",", "."));
+      return Number.isFinite(f) ? f : 0;
   }
+  
+  // 2. Tratamento de valores em CENTAVOS (inteiros, como 37200 ou "36996")
+  let numericValue = Number(raw);
 
-  const cents = parseInt(s, 10);
-  return Number.isNaN(cents) ? 0 : cents / 100;
+  if (!Number.isFinite(numericValue)) return 0;
+  
+  if (Number.isInteger(numericValue)) {
+       return numericValue / 100;
+  }
+  
+  return numericValue; 
+};
+
+
+// Configuração de animação para os Cards (framer-motion)
+const cardContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const cardItemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
 };
 
 export default function ClosedTablesPage() {
@@ -59,11 +89,13 @@ export default function ClosedTablesPage() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [loadingTables, setLoadingTables] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [errorTables, setErrorTables] = useState(null);
 
   // Busca mesas fechadas
   useEffect(() => {
     const fetchClosedTables = async () => {
       setLoadingTables(true);
+      setErrorTables(null);
       setTables([]);
       try {
         const res = await fetch(
@@ -74,16 +106,26 @@ export default function ClosedTablesPage() {
             body: JSON.stringify({ date: date.format("YYYY-MM-DD") }),
           }
         );
-        const data = await res.json();
 
-        const formatted = (data || []).map((t) => ({
+        if (!res.ok) {
+           throw new Error(`Erro de rede: ${res.statusText}`);
+        }
+        
+        const data = await res.json();
+        
+        // Garante que 'data' é um array antes de mapear
+        const safeData = Array.isArray(data) ? data : [];
+
+        const formatted = safeData.map((t) => ({
           ...t,
+          id: t.id || t.mesa_id + t.closed_at, 
           total_order_value: toReais(t.total_order_value),
         }));
 
         setTables(formatted);
       } catch (err) {
         console.error("Erro ao buscar mesas fechadas:", err);
+        setErrorTables(`Não foi possível carregar as mesas para a data ${date.format("DD/MM/YYYY")}. Tente novamente.`);
       } finally {
         setLoadingTables(false);
       }
@@ -95,6 +137,7 @@ export default function ClosedTablesPage() {
   const fetchTableDetails = async (id) => {
     setLoadingDetails(true);
     setSelectedTable(null);
+    setDrawerVisible(true); 
 
     try {
       const res = await fetch(`https://restaurant-sw98.onrender.com/tables/viewclose`, {
@@ -103,15 +146,22 @@ export default function ClosedTablesPage() {
         body: JSON.stringify({ ID: id }),
       });
 
-      const data = await res.json();
+      if (!res.ok) {
+           throw new Error(`Erro de rede: ${res.statusText}`);
+        }
 
-      if (!data || data.length === 0) {
+      const data = await res.json();
+      
+      const safeData = Array.isArray(data) ? data : [];
+
+      if (safeData.length === 0) {
         setLoadingDetails(false);
-        setDrawerVisible(true);
+        setSelectedTable({ mesa_id: id, error: "Nenhum detalhe de transação retornado pelo servidor." });
         return;
       }
 
-      const consolidatedData = data.reduce((acc, currentOrder, index) => {
+      // Lógica de consolidação de dados
+      const consolidatedData = safeData.reduce((acc, currentOrder, index) => {
         const orderTotal = toReais(currentOrder.order_total);
         const totalTransaction = toReais(currentOrder.total_transaction);
         const changeDue = toReais(currentOrder.change_due);
@@ -123,7 +173,13 @@ export default function ClosedTablesPage() {
           acc.transaction_status = currentOrder.transaction_status;
           acc.total_transaction = totalTransaction;
           acc.change_due = changeDue;
-          acc.payment_json = currentOrder.payment_json || [];
+          
+          acc.payment_json = (currentOrder.payment_json || []).map(p => ({
+              ...p,
+              // Prioriza o campo mais confiável (centavos) para conversão
+              value_reais: toReais(p.value_centavos ?? p.value ?? p.value_reais)
+          })); 
+          
           acc.qr_code = currentOrder.qr_code;
           acc.transaction_created_at = currentOrder.transaction_created_at;
           acc.transaction_updated_at = currentOrder.transaction_updated_at;
@@ -145,36 +201,42 @@ export default function ClosedTablesPage() {
 
         return acc;
       }, {});
-
+      
       setSelectedTable(consolidatedData);
-      setDrawerVisible(true);
+
     } catch (err) {
       console.error("Erro ao buscar detalhes da mesa:", err);
+      setSelectedTable({ mesa_id: id, error: "Erro ao carregar detalhes da mesa. Verifique a conexão." });
     } finally {
       setLoadingDetails(false);
     }
   };
 
-  const columns = [
-    { title: "Mesa", dataIndex: "number", sorter: (a, b) => a.number - b.number },
+  // Definição das colunas da tabela (useMemo para otimização)
+  const columns = useMemo(() => [
+    { title: "Mesa", dataIndex: "number", sorter: (a, b) => a.number - b.number, width: 80, fixed: 'left' },
     {
       title: "Abertura",
       dataIndex: "opened_at",
       render: (v) => (v ? dayjs(v).format("DD/MM/YYYY HH:mm") : "-"),
       sorter: (a, b) => dayjs(a.opened_at).unix() - dayjs(b.opened_at).unix(),
+      width: 150,
     },
     {
       title: "Fechamento",
       dataIndex: "closed_at",
       render: (v) => (v ? dayjs(v).format("DD/MM/YYYY HH:mm") : "-"),
       sorter: (a, b) => dayjs(a.closed_at).unix() - dayjs(b.closed_at).unix(),
+      width: 150,
     },
     {
       title: "Valor Total",
       dataIndex: "total_order_value",
       key: "total_order_value",
-      render: (v) => currencyFormatter(v),
+      render: (v) => <Tag color="blue" style={{ fontSize: '1em', padding: '4px 8px' }}>{currencyFormatter(v)}</Tag>,
       sorter: (a, b) => a.total_order_value - b.total_order_value,
+      width: 120,
+      align: 'right',
     },
     {
       title: "Status",
@@ -185,71 +247,185 @@ export default function ClosedTablesPage() {
         { text: "Fechado", value: false },
       ],
       onFilter: (value, record) => record.is_open === value,
+      width: 100,
     },
     {
       title: "Ações",
       render: (_, record) => (
         <Button
           onClick={() => fetchTableDetails(record.id)}
-          disabled={loadingDetails}
-          icon={loadingDetails && selectedTable?.mesa_id === record.id ? <LoadingOutlined /> : null}
+          loading={loadingDetails && selectedTable?.mesa_id === record.id}
+          icon={<InfoCircleOutlined />}
+          type="primary"
+          ghost
+          size="small"
         >
-          Ver detalhes
+          Detalhes
         </Button>
       ),
+      width: 100,
+      fixed: 'right',
     },
-  ];
+  ], [loadingDetails, selectedTable?.mesa_id]);
 
+  // Renderização do conteúdo do Drawer (detalhes)
   const renderDrawerDetails = () => {
+    // 1. Loading
     if (loadingDetails) {
       return (
         <div style={{ textAlign: "center", padding: "50px 0" }}>
-          <Spin size="large" tip="Carregando detalhes..." />
+          <Spin size="large" tip="Buscando detalhes da transação..." indicator={<LoadingOutlined style={{ fontSize: 36 }} spin />} />
         </div>
       );
     }
-
-    if (!selectedTable) return <p>Nenhum detalhe disponível.</p>;
+    
+    // 2. Erro ou Detalhes Indisponíveis
+    if (!selectedTable || selectedTable.error) {
+        return (
+            <Alert
+                message="Dados Indisponíveis"
+                description={selectedTable?.error || "Nenhum detalhe da transação foi encontrado para esta mesa."}
+                type="warning"
+                showIcon
+            />
+        );
+    }
 
     const table = selectedTable;
+    
+    // ********* LÓGICA DE PAGAMENTO REFACTORIZADA *********
+    const allPayments = table.payment_json || [];
 
-    const orderCollapseItems = table.all_orders.map((order) => {
+    // 1. Ordena os pagamentos pelo valor (do maior para o menor)
+    const sortedPayments = [...allPayments].sort((a, b) => b.value_reais - a.value_reais);
+
+    // Card de Pagamentos (Versão Simples e Ordenada)
+    const paymentsCard = (
+      <Card 
+        title={<Space><DollarCircleOutlined style={{ color: '#52c41a' }}/> Detalhes dos Pagamentos</Space>} 
+        bordered 
+        style={{ marginBottom: 24 }} 
+        hoverable
+      >
+        <List
+            size="large"
+            dataSource={sortedPayments}
+            renderItem={(payment, index) => {
+                const valueNumber = payment.value_reais;
+                const label = payment.methodLabel || payment.method || "Método Não Identificado";
+                // Cor e estilo para destacar o maior pagamento (o primeiro na lista ordenada)
+                const isLargest = index === 0;
+
+                return (
+                    <List.Item style={{ padding: '8px 0', borderBottom: index < sortedPayments.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
+                        <Row justify="space-between" style={{ width: '100%' }} align="middle">
+                            <Col style={{ fontWeight: isLargest ? 'bold' : 'normal', color: isLargest ? '#3f8600' : 'rgba(0, 0, 0, 0.85)' }}>
+                                {isLargest && <CheckCircleOutlined style={{ marginRight: 8, color: '#52c41a' }} />}
+                                {label}
+                            </Col>
+                            <Col>
+                                <Tag 
+                                    color={isLargest ? "green" : "blue"}
+                                    style={{ 
+                                        fontSize: isLargest ? '1.1em' : '1em', 
+                                        padding: '4px 8px', 
+                                        fontWeight: isLargest ? 'bold' : 'normal'
+                                    }}
+                                >
+                                    {currencyFormatter(valueNumber)}
+                                </Tag>
+                            </Col>
+                        </Row>
+                    </List.Item>
+                );
+            }}
+        >
+             {/* Adiciona um item para o total de pagamentos */}
+            <List.Item style={{ paddingTop: 16, borderTop: '2px solid #0000001a' }}>
+                <Row justify="space-between" style={{ width: '100%' }} align="middle">
+                    <Col style={{ fontWeight: 'bold', fontSize: '1.1em' }}>
+                        Total Recebido
+                    </Col>
+                    <Col>
+                        <Tag color="volcano" style={{ fontSize: '1.2em', padding: '6px 12px', fontWeight: 'bold' }}>
+                            {currencyFormatter(table.total_transaction)}
+                        </Tag>
+                    </Col>
+                </Row>
+            </List.Item>
+        </List>
+      </Card>
+    );
+    // ********* FIM DA LÓGICA DE PAGAMENTO REFACTORIZADA *********
+
+    // Card de Transação (Mantido)
+    const transactionCard = table.transaction_id && (
+      <Card title={<Space><InfoCircleOutlined style={{ color: '#faad14' }}/> Detalhes da Transação</Space>} bordered style={{ marginBottom: 24 }} hoverable>
+        <Descriptions column={1} size="small" bordered layout="vertical">
+          <Descriptions.Item label="ID da Transação">{table.transaction_id}</Descriptions.Item>
+          <Descriptions.Item label="Status">
+            <Tag color={table.transaction_status === "completed" ? "success" : "error"} icon={table.transaction_status === "completed" ? <CheckCircleOutlined /> : <LoadingOutlined />}>
+              {table.transaction_status || "N/A"}
+            </Tag>
+          </Descriptions.Item>
+          <Descriptions.Item label="Criada em">{dayjs(table.transaction_created_at).format("DD/MM/YYYY HH:mm")}</Descriptions.Item>
+          <Descriptions.Item label="Atualizada em">{dayjs(table.transaction_updated_at).format("DD/MM/YYYY HH:mm")}</Descriptions.Item>
+        </Descriptions>
+      </Card>
+    );
+
+    // Itens de Collapse para Pedidos (Mantido)
+    const orderCollapseItems = table.all_orders.map((order, index) => {
       const orderTotal = parseFloat(order.order_total || 0);
 
       return {
         key: `order_${order.order_id}`,
         label: (
-          <Row justify="space-between" style={{ width: "100%" }}>
+          <Row justify="space-between" align="middle" style={{ width: "100%" }}>
             <Col>
               <Space>
-                <ShoppingCartOutlined />
+                <ShoppingCartOutlined style={{ color: '#1890ff' }}/>
                 Pedido #{order.order_id} ({order.produtos?.length || 0} itens)
               </Space>
             </Col>
             <Col>
-              <strong style={{ color: "#3f8600" }}>Total: {currencyFormatter(orderTotal)}</strong>
+              <Tag color="blue" style={{ fontSize: '1em', padding: '4px 8px' }}>
+                {currencyFormatter(orderTotal)}
+              </Tag>
             </Col>
           </Row>
         ),
         children: (
           <List
             itemLayout="horizontal"
-            dataSource={order.produtos}
+            dataSource={order.produtos || []}
             renderItem={(item) => {
               const unitReais = toReais(item.preco_unitario);
               const quantidade = item.quantidade || 0;
               const totalItem = unitReais * quantidade;
 
               return (
-                <List.Item>
+                <List.Item
+                  style={{ padding: '10px 0' }}
+                  actions={[<strong style={{ minWidth: 80, textAlign: 'right', display: 'block' }}>{currencyFormatter(totalItem)}</strong>]}
+                >
                   <List.Item.Meta
-                    avatar={<Image width={60} src={item.imagem || "placeholder.jpg"} fallback="placeholder.jpg" />}
-                    title={`${item.produto_nome} (x${quantidade})`}
-                    description={`${item.descricao} | ${currencyFormatter(unitReais)} (un.)`}
+                    avatar={
+                      <Image 
+                        width={60} 
+                        height={60} 
+                        style={{ borderRadius: 4, objectFit: 'cover' }}
+                        src={item.imagem || "placeholder.jpg"} 
+                        fallback="placeholder.jpg" 
+                      />
+                    }
+                    title={
+                      <div style={{ fontWeight: 600 }}>
+                        {item.produto_nome} <Tag color="default">x{quantidade}</Tag>
+                      </div>
+                    }
+                    description={`${currencyFormatter(unitReais)} (un.)`}
                   />
-                  <div>
-                    <strong>{currencyFormatter(totalItem)}</strong>
-                  </div>
                 </List.Item>
               );
             }}
@@ -257,157 +433,229 @@ export default function ClosedTablesPage() {
         ),
       };
     });
-
-    const paymentsCard = (
-      <Card title={<Space><DollarCircleOutlined /> Pagamentos Efetuados</Space>} bordered style={{ marginBottom: 16 }}>
-        <List
-          dataSource={Array.isArray(table.payment_json) ? table.payment_json : []}
-          renderItem={(payment) => {
-            const rawValue = payment.value ?? payment.value_reais ?? 0;
-            const valueNumber = toReais(rawValue);
-            const label = payment.methodLabel || payment.method || "Pagamento";
-            return (
-              <Row justify="space-between">
-                <Col><strong>{label}:</strong></Col>
-                <Col>{currencyFormatter(valueNumber)}</Col>
-              </Row>
-            );
-          }}
-        />
-      </Card>
-    );
-
-    const transactionCard = table.transaction_id && (
-      <Card title={<Space><InfoCircleOutlined /> Informações da Transação</Space>} bordered style={{ marginBottom: 16 }}>
-        <Descriptions column={1} size="small" bordered>
-          <Descriptions.Item label="ID">{table.transaction_id}</Descriptions.Item>
-          <Descriptions.Item label="Status">
-            <Tag color={table.transaction_status === "completed" ? "green" : "red"}>
-              {table.transaction_status || "N/A"}
-            </Tag>
-          </Descriptions.Item>
-          <Descriptions.Item label="Total Transação (R$)">{currencyFormatter(toReais(table.total_transaction))}</Descriptions.Item>
-          <Descriptions.Item label="Criada em">{dayjs(table.transaction_created_at).format("DD/MM/YYYY HH:mm")}</Descriptions.Item>
-          <Descriptions.Item label="Atualizada em">{dayjs(table.transaction_updated_at).format("DD/MM/YYYY HH:mm")}</Descriptions.Item>
-        </Descriptions>
-      </Card>
-    );
+    
 
     return (
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Row gutter={16} style={{ marginBottom: 16 }}>
-          <Col span={8}>
-            <Statistic
-              title="Total Pedidos"
-              value={table.total_orders_sum}
-              precision={2}
-              formatter={currencyFormatter}
-              valueStyle={{ color: "#3f8600" }}
-            />
-          </Col>
-          <Col span={8}>
-            <Statistic
-              title="Valor Pago"
-              value={toReais(table.total_transaction)}
-              precision={2}
-              formatter={currencyFormatter}
-            />
-          </Col>
-          <Col span={8}>
-            <Statistic
-              title="Troco"
-              value={toReais(table.change_due)}
-              precision={2}
-              formatter={currencyFormatter}
-              valueStyle={{ color: table.change_due > 0 ? "#faad14" : "#000000d9" }}
-            />
-          </Col>
-        </Row>
+      <motion.div
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+        style={{ width: "100%" }}
+      >
+        {/* Usamos Space direction="vertical" para garantir o empilhamento */}
+        <Space direction="vertical" style={{ width: "100%" }}>
+          {/* Estatísticas de Resumo no topo */}
+          <Row gutter={16} style={{ marginBottom: 24 }}>
+            <Col xs={24} sm={8}>
+              <Card size="small" style={{ textAlign: 'center' }}>
+                <Statistic
+                  title="Total Pedidos"
+                  value={table.total_orders_sum}
+                  precision={2}
+                  formatter={currencyFormatter}
+                  valueStyle={{ color: "#3f8600", fontWeight: 'bold' }}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={8}>
+               <Card size="small" style={{ textAlign: 'center', marginTop: 16, '@media (min-width: 576px)': { marginTop: 0 } }}>
+                <Statistic
+                  title="Valor Pago"
+                  value={table.total_transaction}
+                  precision={2}
+                  formatter={currencyFormatter}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={8}>
+              <Card size="small" style={{ textAlign: 'center', marginTop: 16, '@media (min-width: 576px)': { marginTop: 0 } }}>
+                <Statistic
+                  title="Troco"
+                  value={table.change_due}
+                  precision={2}
+                  formatter={currencyFormatter}
+                  valueStyle={{ color: table.change_due > 0.01 ? "#faad14" : "#000000d9", fontWeight: 'bold' }}
+                />
+              </Card>
+            </Col>
+          </Row>
 
-        <Divider orientation="left" plain>Informações Gerais</Divider>
+          <Divider orientation="left" plain>Informações Básicas</Divider>
 
-        <Card title={<Space><InfoCircleOutlined /> Informações da Mesa/Loja</Space>} bordered style={{ marginBottom: 16 }}>
-          <Descriptions column={2} bordered size="small">
-            <Descriptions.Item label="Mesa ID">{table.mesa_id}</Descriptions.Item>
-            <Descriptions.Item label="Loja">{table.nome_loja}</Descriptions.Item>
-            <Descriptions.Item label="1º Pedido">{dayjs(table.first_order_created_at).format("DD/MM/YYYY HH:mm")}</Descriptions.Item>
-            <Descriptions.Item label="Transação ID">{table.transaction_id || "N/A"}</Descriptions.Item>
-          </Descriptions>
-        </Card>
-
-        <Divider orientation="left" plain>Pedidos</Divider>
-        <Collapse
-          items={orderCollapseItems}
-          defaultActiveKey={orderCollapseItems.map((item) => item.key)}
-          style={{ marginBottom: 16 }}
-        />
-
-        {paymentsCard}
-        {transactionCard}
-
-        {table.qr_code && (
-          <Card title={<Space><InfoCircleOutlined /> QR Code</Space>} bordered style={{ marginBottom: 16 }}>
-            <p style={{ wordBreak: "break-all", fontSize: "0.8em" }}>{table.qr_code}</p>
+          <Card title={<Space><InfoCircleOutlined /> Informações da Mesa</Space>} bordered style={{ marginBottom: 24 }} hoverable>
+            <Descriptions column={{ xs: 1, sm: 2, md: 2 }} bordered size="small">
+              <Descriptions.Item label="Mesa ID"><strong>{table.mesa_id}</strong></Descriptions.Item>
+              <Descriptions.Item label="Loja">{table.nome_loja}</Descriptions.Item>
+              <Descriptions.Item label="1º Pedido">{dayjs(table.first_order_created_at).format("DD/MM/YYYY HH:mm")}</Descriptions.Item>
+              <Descriptions.Item label="Transação ID">{table.transaction_id || <Tag color="default">N/A</Tag>}</Descriptions.Item>
+            </Descriptions>
           </Card>
-        )}
-      </Space>
+          
+          {/* SEÇÃO PAGAMENTO E TRANSAÇÃO - EMPILHADA */}
+          <Divider orientation="left" plain>Pagamento e Transação</Divider>
+          
+          {/* Card de Pagamento (AGORA SIMPLES E ORDENADO) */}
+          {paymentsCard}
+          
+          {/* Card de Transação */}
+          {transactionCard}
+
+          <Divider orientation="left" plain>Detalhamento dos Pedidos</Divider>
+          <Collapse
+            items={orderCollapseItems}
+            defaultActiveKey={orderCollapseItems.map((item) => item.key)}
+            style={{ marginBottom: 16 }}
+            expandIconPosition="right"
+          />
+
+          {table.qr_code && (
+            <Card title={<Space><InfoCircleOutlined /> QR Code Completo</Space>} bordered style={{ marginBottom: 16 }}>
+              <Alert message="Atenção: Este é o conteúdo completo do QR Code da transação." type="info" style={{ marginBottom: 10 }}/>
+              <p style={{ wordBreak: "break-all", fontSize: "0.8em", padding: 10, backgroundColor: '#f0f2f5', borderRadius: 4 }}>{table.qr_code}</p>
+            </Card>
+          )}
+        </Space>
+      </motion.div>
     );
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2><TableOutlined /> Pagamentos Realizados </h2>
+    <Layout style={{ minHeight: "100vh", backgroundColor: '#f0f2f5' }}>
+      <Content style={{ padding: 20 }}>
+        <Card bordered={false} style={{ marginBottom: 20, boxShadow: '0 2px 8px rgba(0, 0, 0, 0.09)' }}>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col>
+              <h2><TableOutlined /> Mesas Fechadas e Pagamentos</h2>
+            </Col>
+            <Col>
+              <Space>
+                <DatePicker 
+                  value={date} 
+                  onChange={setDate} 
+                  allowClear={false} 
+                  inputReadOnly 
+                  suffixIcon={<CalendarOutlined />}
+                  style={{ width: 150 }}
+                />
+                <Button
+                  type={view === "table" ? "primary" : "default"}
+                  onClick={() => setView("table")}
+                  icon={<TableOutlined />}
+                >
+                  Tabela
+                </Button>
+                <Button
+                  type={view === "cards" ? "primary" : "default"}
+                  onClick={() => setView("cards")}
+                  icon={<AppstoreOutlined />}
+                >
+                  Cards
+                </Button>
+              </Space>
+            </Col>
+          </Row>
+        </Card>
 
-      <Space style={{ marginBottom: 16 }}>
-        <DatePicker value={date} onChange={setDate} allowClear={false} />
-        <Button
-          type={view === "table" ? "primary" : "default"}
-          onClick={() => setView("table")}
-          icon={<TableOutlined />}
+        {errorTables && (
+            <Alert
+                message="Erro de Carregamento"
+                description={errorTables}
+                type="error"
+                showIcon
+                closable
+                onClose={() => setErrorTables(null)}
+                style={{ marginBottom: 20 }}
+            />
+        )}
+        
+        <AnimatePresence mode="wait">
+          {view === "cards" ? (
+            <motion.div
+              key="cardsView"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Spin spinning={loadingTables} tip="Carregando mesas...">
+                {tables.length > 0 ? (
+                  <motion.div
+                    variants={cardContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}
+                  >
+                    {tables.map((t) => (
+                      <motion.div key={t.id} variants={cardItemVariants}>
+                        <Card
+                          title={`Mesa ${t.number}`}
+                          onClick={() => fetchTableDetails(t.id)}
+                          hoverable
+                          headStyle={{ backgroundColor: t.is_open ? '#f6ffed' : '#fff1f0', borderBottom: t.is_open ? '1px solid #b7eb8f' : '1px solid #ffa39e' }}
+                          extra={<Tag color={t.is_open ? "success" : "error"}>{t.is_open ? "ABERTA" : "FECHADA"}</Tag>}
+                          style={{ boxShadow: '0 1px 4px rgba(0, 0, 0, 0.05)' }}
+                        >
+                          <Statistic
+                              title="Valor Total"
+                              value={t.total_order_value}
+                              precision={2}
+                              formatter={currencyFormatter}
+                              valueStyle={{ color: "#3f8600", fontSize: '1.5em' }}
+                          />
+                          <Divider style={{ margin: '12px 0' }}/>
+                          <Row>
+                              <Col span={12}>
+                                  <p><b>Abertura:</b></p>
+                                  <small>{dayjs(t.opened_at).format("DD/MM HH:mm")}</small>
+                              </Col>
+                              <Col span={12}>
+                                  <p><b>Fechamento:</b></p>
+                                  <small>{t.closed_at ? dayjs(t.closed_at).format("DD/MM HH:mm") : "-"}</small>
+                              </Col>
+                          </Row>
+                          
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                ) : (
+                    !loadingTables && <Empty description={`Nenhuma mesa fechada em ${date.format('DD/MM/YYYY')}`} />
+                )}
+              </Spin>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="tableView"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Table 
+                rowKey="id" 
+                dataSource={tables} 
+                columns={columns} 
+                pagination={{ pageSize: 10, showSizeChanger: true }} 
+                loading={loadingTables}
+                scroll={{ x: 800 }} 
+                bordered
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <Drawer
+          title={<Space><TableOutlined /> Detalhes da Mesa: <Tag color="blue" style={{ fontSize: '1.2em' }}>Mesa {selectedTable?.mesa_id}</Tag></Space>}
+          placement="right"
+          onClose={() => setDrawerVisible(false)}
+          open={drawerVisible}
+          width={window.innerWidth > 768 ? 720 : "100%"}
+          destroyOnClose={true} 
+          maskClosable={!loadingDetails}
         >
-          Tabela
-        </Button>
-        <Button
-          type={view === "cards" ? "primary" : "default"}
-          onClick={() => setView("cards")}
-          icon={<AppstoreOutlined />}
-        >
-          Cards
-        </Button>
-      </Space>
-
-      {view === "cards" ? (
-        <Spin spinning={loadingTables} tip="Carregando mesas...">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
-            {tables.map((t) => (
-              <Card
-                key={t.id}
-                title={`Mesa ${t.number}`}
-                onClick={() => fetchTableDetails(t.id)}
-                hoverable
-                extra={<Tag color={t.is_open ? "green" : "red"}>{t.is_open ? "Aberto" : "Fechado"}</Tag>}
-              >
-                <p><b>Total:</b> {currencyFormatter(t.total_order_value)}</p>
-                <p><b>Abertura:</b> {dayjs(t.opened_at).format("DD/MM HH:mm")}</p>
-                <p><b>Fechamento:</b> {t.closed_at ? dayjs(t.closed_at).format("DD/MM HH:mm") : "-"}</p>
-              </Card>
-            ))}
-          </div>
-        </Spin>
-      ) : (
-        <Table rowKey="id" dataSource={tables} columns={columns} pagination={{ pageSize: 10 }} loading={loadingTables} />
-      )}
-
-      <Drawer
-        title={<Space><TableOutlined /> Detalhes da Mesa: {selectedTable?.mesa_id}</Space>}
-        placement="right"
-        onClose={() => setDrawerVisible(false)}
-        open={drawerVisible}
-        width={window.innerWidth > 768 ? 720 : "100%"}
-        destroyOnClose={true}
-      >
-        {renderDrawerDetails()}
-      </Drawer>
-    </div>
+          {renderDrawerDetails()}
+        </Drawer>
+      </Content>
+    </Layout>
   );
 }
