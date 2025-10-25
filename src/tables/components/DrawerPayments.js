@@ -14,6 +14,7 @@ import {
   message,
 } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useTables } from "../../context/tablesContext";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -43,6 +44,8 @@ const DrawerPayment = ({
 }) => {
   const totalToPayCentavos = useMemo(() => totalToCentavos(totalToPay), [totalToPay]);
   
+  const { setTables } = useTables()
+
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(false); // NOVO: Estado para controle de loading
   const [form] = Form.useForm();
@@ -79,78 +82,70 @@ const DrawerPayment = ({
   
   // 5. Função para finalizar o pagamento (AGORA COM FETCH)
   const handleFinalizePayment = async () => {
-    if (!isComplete) {
-      message.warning("Ainda há um valor pendente para pagamento.");
-      return;
-    }
+  if (!isComplete) {
+    message.warning("Ainda há um valor pendente para pagamento.");
+    return;
+  }
 
-    setLoading(true); // Inicia o loading
+  setLoading(true);
 
-    const trocoCentavos = isOverpaid ? Math.abs(remainingValueCentavos) : 0;
-    const trocoReais = totalToReais(trocoCentavos);
+  const trocoCentavos = isOverpaid ? Math.abs(remainingValueCentavos) : 0;
+  const trocoReais = totalToReais(trocoCentavos);
 
-    // Estrutura de Pagamentos para a API
-    const paymentsForAPI = payments.map(p => ({
-        // O back-end em Go espera o formato original da nossa conversa:
-        id: p.id,
-        method: p.method,
-        methodLabel: p.methodLabel,
-        value: p.value, // Centavos (inteiro)
-        value_centavos: p.value,
-        value_reais: totalToReais(p.value),
-    }));
-    
-    // Objeto FINAL para o back-end (similar ao JSON que o handler Go espera)
-    const paymentData = {
-      tableID: tableID, // Mantenho como number
-      tableNumber: tableNumber, // Mantenho como number
-      totalPaid: totalPaidCentavos, // Total pago em Reais para consistência com o seu modelo
-      payments: paymentsForAPI, 
-      changeDue: trocoReais.toFixed(2),
-      totalTransaction: totalToPayCentavos,
-    };
+  const paymentsForAPI = payments.map(p => ({
+    id: p.id,
+    method: p.method,
+    methodLabel: p.methodLabel,
+    value: p.value,
+    value_centavos: p.value,
+    value_reais: totalToReais(p.value),
+  }));
 
-    try {
-      // ------------------------------------------------
-      // INÍCIO DA CHAMADA FETCH (POST)
-      // ------------------------------------------------
-      const response = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // 'Authorization': 'Bearer ' + seuTokenDeSessao, // Se necessário
-        },
-        body: JSON.stringify(paymentData),
-      });
-
-      const result = await response.json();
-      console.log(paymentData)
-      
-      if (!response.ok) {
-        // Se a resposta HTTP não for 2xx (ex: 400 Bad Request)
-        console.log(paymentData)
-        throw new Error(result.message || result.error || "Erro ao processar pagamento no servidor.");
-      }
-
-      // Sucesso
-      message.success(result.message || 
-        `Mesa ${tableNumber} fechada! Pago: R$ ${totalToReais(totalPaidCentavos).toFixed(2)}.`
-      );
-      
-      // Resetar e fechar
-      setPayments([]);
-      onClose();
-      if (onPaymentSuccess) {
-          onPaymentSuccess();
-      }
-
-    } catch (error) {
-      console.error("Erro na transação de pagamento:", error);
-      message.error(`Falha ao fechar mesa: ${error.message}`);
-    } finally {
-      setLoading(false); // Finaliza o loading
-    }
+  const paymentData = {
+    tableID,
+    tableNumber,
+    totalPaid: totalPaidCentavos,
+    payments: paymentsForAPI,
+    changeDue: trocoReais.toFixed(2),
+    totalTransaction: totalToPayCentavos,
   };
+
+  try {
+    const response = await fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(paymentData),
+    });
+
+    const result = await response.json();
+    console.log(paymentData);
+
+    if (!response.ok) {
+      throw new Error(result.message || result.error || "Erro ao processar pagamento no servidor.");
+    }
+
+    // ✅ Sucesso
+    message.success(
+      result.message ||
+        `Mesa ${tableNumber} fechada! Pago: R$ ${totalToReais(totalPaidCentavos).toFixed(2)}.`
+    );
+
+    // 🔥 REMOVE a mesa paga do contexto global
+    setTables(prevTables => prevTables.filter(t => t.id !== tableID));
+
+    // Resetar e fechar
+    setPayments([]);
+    onClose();
+    if (onPaymentSuccess) onPaymentSuccess();
+
+  } catch (error) {
+    console.error("Erro na transação de pagamento:", error);
+    message.error(`Falha ao fechar mesa: ${error.message}`);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Renderização do troco (mantida)
   const renderTroco = () => {
