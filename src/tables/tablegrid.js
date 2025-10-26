@@ -1,7 +1,7 @@
 // tables/TableGrid.jsx
 import React, { useState, useCallback, useEffect } from "react";
-// IMPORTE O CSS DO ANTD UMA VEZ NO SEU APP (index.js ou App.jsx)
-// import "antd/dist/reset.css";
+ 
+ import "antd/dist/reset.css";
 import {
   Row,
   Col,
