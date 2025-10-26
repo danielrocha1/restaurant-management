@@ -1,6 +1,6 @@
 // tables/TableGrid.jsx
 import React, { useState, useCallback, useEffect } from "react";
-import { Row, Col, message, Skeleton, Typography, Button, Space, Divider } from "antd";
+import { Row, Col, notification, Skeleton, Typography, Button, Space, Divider } from "antd";
 import {
   CoffeeOutlined,
   AlertOutlined,
@@ -68,7 +68,13 @@ const TableGrid = () => {
         const toAdd = incomingArray.filter((t) => t && typeof t.id !== "undefined" && !existIds.has(t.id));
         if (toAdd.length < 0) return prev;
         const newArr = [...prev, ...toAdd];
-        message.success(`${toAdd.length} mesa(s) adicionada(s) via WS.`);
+        notification.open({
+      message: "Nova(s) Mesa(s) Adicionada(s)",
+      description: `${count} mesa(s) adicionada(s) via WebSocket.`,
+      icon: <TableOutlined style={{ color: "#1890ff" }} />,
+      duration: 4, // Duração em segundos (0 = infinito)
+      placement: "topRight", // Posição da notificação
+    });
         return newArr;
       });
     }
@@ -106,7 +112,6 @@ const TableGrid = () => {
           return;
         }
         console.error(err);
-        message.error(`Falha ao carregar pedidos da Mesa ${table.number}.`);
         setDrawerTableVisible(false);
         setSelectedTableID(null);
         setSelectedTableNumber(null);
