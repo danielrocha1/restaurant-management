@@ -66,7 +66,7 @@ const TableGrid = () => {
       setTables((prev = []) => {
         const existIds = new Set(prev.map((t) => t.id));
         const toAdd = incomingArray.filter((t) => t && typeof t.id !== "undefined" && !existIds.has(t.id));
-        if (toAdd.length === 0) return prev;
+        if (toAdd.length < 0) return prev;
         const newArr = [...prev, ...toAdd];
         message.success(`${toAdd.length} mesa(s) adicionada(s) via WS.`);
         return newArr;
