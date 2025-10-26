@@ -164,7 +164,7 @@ const TableGrid = () => {
             <TableOutlined style={{ marginRight: 10, color: "#1890ff" }} />
             Monitoramento de Mesas Abertas
           </Title>
-          <Text type="secondary">
+          <Text type="primary">
             Clique em uma mesa para visualizar os itens, imprimir a comanda ou fechar a mesa.
           </Text>
         </Col>
