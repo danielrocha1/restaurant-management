@@ -1,6 +1,17 @@
 // tables/TableGrid.jsx
 import React, { useState, useCallback, useEffect } from "react";
-import { Row, Col, notification, Skeleton, Typography, Button, Space, Divider } from "antd";
+// IMPORTE O CSS DO ANTD UMA VEZ NO SEU APP (index.js ou App.jsx)
+// import "antd/dist/reset.css";
+import {
+  Row,
+  Col,
+  notification,
+  Skeleton,
+  Typography,
+  Button,
+  Space,
+  Divider,
+} from "antd";
 import {
   CoffeeOutlined,
   AlertOutlined,
@@ -16,31 +27,24 @@ import { useWS } from "../context/wsContext";
 const { Title, Text } = Typography;
 
 const TableGrid = () => {
-  // --- FIX: chamar o hook corretamente e incluir setTables
+  // hooks do contexto
   const { tables = [], loadingTables, errorTables, fetchTables, setTables } = useTables();
   const { messages } = useWS();
 
-  // Estados locais
+  // estados locais
   const [loadingTableId, setLoadingTableId] = useState(null);
-
-  // Estados dos Drawers e Dados Selecionados
   const [drawerTableVisible, setDrawerTableVisible] = useState(false);
   const [drawerOrderVisible, setDrawerOrderVisible] = useState(false);
-
-  // Dados da Mesa selecionada
   const [selectedTableID, setSelectedTableID] = useState(null);
   const [selectedTableNumber, setSelectedTableNumber] = useState(null);
-
-  // Pedidos da Mesa selecionada
   const [selectedTableOrders, setSelectedTableOrders] = useState([]);
-  // Pedido Detalhe selecionado
   const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
 
-  // ==================  Extra: processar mensagens WS para adicionar mesas ==================
+  // ========== WS: processar mensagens para adicionar mesas ==========
   useEffect(() => {
     if (!messages) return;
 
-    // messages pode ser array ou objeto — pegamos a última se for array
+    // messages pode ser array (pegamos a última) ou um objeto/string
     const raw = Array.isArray(messages) ? messages[messages.length - 1] : messages;
     if (!raw) return;
 
@@ -54,44 +58,52 @@ const TableGrid = () => {
       }
     }
 
-    // Só seguimos se action === 'addTable'
     if (parsed && parsed.action === "addTable") {
       const incoming = parsed.table || parsed.tables || parsed.tableData || [];
-      // garantir que seja array
       const incomingArray = Array.isArray(incoming) ? incoming : [incoming];
 
       if (incomingArray.length === 0) return;
 
-      // Adiciona as mesas novas evitando duplicatas por id
+      // calcula o que realmente será adicionado (evita duplicatas por id)
       setTables((prev = []) => {
         const existIds = new Set(prev.map((t) => t.id));
         const toAdd = incomingArray.filter((t) => t && typeof t.id !== "undefined" && !existIds.has(t.id));
-        if (toAdd.length < 0) return prev;
+
+        if (toAdd.length === 0) {
+          // nada novo -> retorna prev e não mostra notificação
+          return prev;
+        }
+
         const newArr = [...prev, ...toAdd];
+
+        // dispara notificação no próximo tick para garantir que React/DOM esteja estável
+        setTimeout(() => {
+          notification.open({
+            message: "Nova(s) Mesa(s) Adicionada(s)",
+            description: `${toAdd.length} mesa(s) adicionada(s) via WebSocket.`,
+            icon: <TableOutlined style={{ color: "#1890ff" }} />,
+            duration: 4,
+            placement: "topRight",
+          });
+        }, 0);
+
         return newArr;
       });
-      notification.open({
-      message: "Nova(s) Mesa(s) Adicionada(s)",
-      description: `1 mesa(s) adicionada(s) via WebSocket.`,
-      icon: <TableOutlined style={{ color: "#1890ff" }} />,
-      duration: 4, // Duração em segundos (0 = infinito)
-      placement: "topRight", // Posição da notificação
-    });
     }
   }, [messages, setTables]);
 
-  // ===== 1. Carregar Pedidos da Mesa (Refatorado com useCallback) =====
+  // ===== 1. Carregar Pedidos da Mesa =====
   const handleTableClick = useCallback(
     async (table) => {
       setLoadingTableId(table.id);
       setSelectedTableID(table.id);
       setSelectedTableNumber(table.number);
       setSelectedTableOrders([]); // limpa lista anterior
-      setDrawerTableVisible(true); // abre o Drawer imediatamente (mostrando loading)
+      setDrawerTableVisible(true); // abre o Drawer mostrando loading
 
       const controller = new AbortController();
       const url = "https://restaurant-sw98.onrender.com/tables/view";
-      const body = { number: table.id };
+      const body = { number: table.number }; // <-- usa table.number (corrigido)
 
       try {
         const res = await fetch(url, {
@@ -112,6 +124,7 @@ const TableGrid = () => {
           return;
         }
         console.error(err);
+        // não mostrar erro de message aqui para não poluir, apenas fecha o drawer
         setDrawerTableVisible(false);
         setSelectedTableID(null);
         setSelectedTableNumber(null);
@@ -119,8 +132,7 @@ const TableGrid = () => {
         setLoadingTableId(null);
       }
 
-      // OBS: este return não é usado quando handleTableClick é chamado diretamente.
-      // Se quiser abortar fetch ao desmontar, gerencie o controller com useEffect.
+      // Nota: esse return não age como cleanup do useEffect — se precisar, gerencie controller com useEffect.
       return () => controller.abort();
     },
     []
@@ -135,7 +147,7 @@ const TableGrid = () => {
   // ===== 3. Funções de Fechamento =====
   const closeTableDrawer = useCallback(() => {
     setDrawerTableVisible(false);
-    setSelectedTableOrders([]); // Limpa os dados ao fechar
+    setSelectedTableOrders([]);
     setSelectedTableID(null);
     setSelectedTableNumber(null);
     setLoadingTableId(null);
@@ -143,7 +155,7 @@ const TableGrid = () => {
 
   const closeOrderDrawer = useCallback(() => {
     setDrawerOrderVisible(false);
-    setSelectedOrderDetails(null); // Limpa os dados ao fechar
+    setSelectedOrderDetails(null);
   }, []);
 
   // ==================== Renderização ====================
@@ -162,14 +174,14 @@ const TableGrid = () => {
 
   return (
     <div style={{ padding: 24, background: "#f0f2f5", minHeight: "100vh" }}>
-      {/* Cabeçalho no Estilo dos Outros Modelos */}
+      {/* Cabeçalho */}
       <Row justify="space-between" align="middle" style={{ marginBottom: 20 }}>
         <Col>
           <Title level={2} style={{ margin: 0, color: "#333", marginBottom: "10px" }}>
             <TableOutlined style={{ marginRight: 10, color: "#1890ff" }} />
             Monitoramento de Mesas Abertas
           </Title>
-          <Text type="primary">
+          <Text type="secondary">
             Clique em uma mesa para visualizar os itens, imprimir a comanda ou fechar a mesa.
           </Text>
         </Col>
@@ -185,7 +197,6 @@ const TableGrid = () => {
       <Divider style={{ margin: "15px 0" }} />
 
       <Row gutter={[20, 20]} justify="start">
-        {/* Skeleton */}
         {loadingTables
           ? Array.from({ length: 15 }).map((_, idx) => (
               <Col key={idx} xs={12} sm={8} md={6} lg={4} xl={3}>
@@ -198,7 +209,6 @@ const TableGrid = () => {
               </Col>
             ))}
 
-        {/* Se não houver mesas */}
         {!loadingTables && (tables?.length || 0) === 0 && (
           <Col span={24} style={{ textAlign: "center", padding: 50, background: "#fff", borderRadius: 8 }}>
             <CoffeeOutlined style={{ fontSize: 40, color: "#ccc", marginBottom: 10 }} />
@@ -211,7 +221,6 @@ const TableGrid = () => {
         )}
       </Row>
 
-      {/* Drawers */}
       <DrawerTableOrders
         visible={drawerTableVisible}
         tableID={selectedTableID}
