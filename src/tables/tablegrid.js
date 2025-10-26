@@ -5,7 +5,6 @@ import React, { useState, useCallback, useEffect } from "react";
 import {
   Row,
   Col,
-  notification,
   Skeleton,
   Typography,
   Button,
@@ -23,6 +22,7 @@ import DrawerTableOrders from "./components/DrawerTableOrders";
 import DrawerOrderDetails from "./components/DrawerOrderDetails";
 import { useTables } from "../context/tablesContext";
 import { useWS } from "../context/wsContext";
+import { useNotifications } from "../context/notificationContext";
 
 const { Title, Text } = Typography;
 
@@ -30,6 +30,7 @@ const TableGrid = () => {
   // hooks do contexto
   const { tables = [], loadingTables, errorTables, fetchTables, setTables } = useTables();
   const { messages } = useWS();
+  const { notifications } = useNotifications();
 
   // estados locais
   const [loadingTableId, setLoadingTableId] = useState(null);
@@ -42,50 +43,42 @@ const TableGrid = () => {
 
   // ========== WS: processar mensagens para adicionar mesas ==========
   useEffect(() => {
-    if (!messages) return;
+    if (!messages || messages.length === 0) return;
 
-    // messages pode ser array (pegamos a última) ou um objeto/string
-    const raw = Array.isArray(messages) ? messages[messages.length - 1] : messages;
-    if (!raw) return;
+    // Pega a última mensagem
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage) return;
 
-    let parsed = raw;
-    if (typeof raw === "string") {
+    let parsed = lastMessage;
+    if (typeof lastMessage === "string") {
       try {
-        parsed = JSON.parse(raw);
+        parsed = JSON.parse(lastMessage);
       } catch (e) {
-        console.warn("Mensagem WS não é JSON:", raw);
+        console.warn("Mensagem WS não é JSON:", lastMessage);
         return;
       }
     }
 
+    // Processa apenas mensagens de adição de mesa
     if (parsed && parsed.action === "addTable") {
       const incoming = parsed.table || parsed.tables || parsed.tableData || [];
       const incomingArray = Array.isArray(incoming) ? incoming : [incoming];
 
       if (incomingArray.length === 0) return;
 
-      // calcula o que realmente será adicionado (evita duplicatas por id)
+      // Calcula o que realmente será adicionado (evita duplicatas por id)
       setTables((prev = []) => {
         const existIds = new Set(prev.map((t) => t.id));
         const toAdd = incomingArray.filter((t) => t && typeof t.id !== "undefined" && !existIds.has(t.id));
 
         if (toAdd.length === 0) {
-          // nada novo -> retorna prev e não mostra notificação
           return prev;
         }
 
         const newArr = [...prev, ...toAdd];
 
-        // dispara notificação no próximo tick para garantir que React/DOM esteja estável
-        setTimeout(() => {
-          notification.open({
-            message: "Nova(s) Mesa(s) Adicionada(s)",
-            description: `${toAdd.length} mesa(s) adicionada(s) via WebSocket.`,
-            icon: <TableOutlined style={{ color: "#1890ff" }} />,
-            duration: 4,
-            placement: "topRight",
-          });
-        }, 0);
+        // A notificação agora é tratada pelo contexto de notificações
+        // através do wsContext, então não precisamos duplicar aqui
 
         return newArr;
       });
@@ -103,7 +96,7 @@ const TableGrid = () => {
 
       const controller = new AbortController();
       const url = "https://restaurant-sw98.onrender.com/tables/view";
-      const body = { number: table.number }; // <-- usa table.number (corrigido)
+      const body = { number: table.id };
 
       try {
         const res = await fetch(url, {
@@ -119,12 +112,24 @@ const TableGrid = () => {
 
         const data = await res.json();
         setSelectedTableOrders(data);
+        
+        // Notificação de sucesso ao carregar pedidos
+        notifications.system.success(
+          "Pedidos Carregados",
+          `Pedidos da Mesa ${table.number} carregados com sucesso.`
+        );
       } catch (err) {
         if (err.name === "AbortError") {
           return;
         }
         console.error(err);
-        // não mostrar erro de message aqui para não poluir, apenas fecha o drawer
+        
+        // Notificação de erro
+        notifications.system.error(
+          "Erro ao Carregar Pedidos",
+          `Não foi possível carregar os pedidos da Mesa ${table.number}.`
+        );
+        
         setDrawerTableVisible(false);
         setSelectedTableID(null);
         setSelectedTableNumber(null);
@@ -132,10 +137,9 @@ const TableGrid = () => {
         setLoadingTableId(null);
       }
 
-      // Nota: esse return não age como cleanup do useEffect — se precisar, gerencie controller com useEffect.
       return () => controller.abort();
     },
-    []
+    [notifications]
   );
 
   // ===== 2. Selecionar Pedido para Detalhes =====
@@ -158,6 +162,14 @@ const TableGrid = () => {
     setSelectedOrderDetails(null);
   }, []);
 
+  // Função para recarregar mesas com notificação
+  const handleReloadTables = useCallback(() => {
+    if (fetchTables) {
+      fetchTables();
+      notifications.system.info("Recarregando", "Atualizando lista de mesas...");
+    }
+  }, [fetchTables, notifications]);
+
   // ==================== Renderização ====================
   if (errorTables) {
     return (
@@ -165,7 +177,7 @@ const TableGrid = () => {
         <AlertOutlined style={{ fontSize: 40, color: "#faad14", marginBottom: 10 }} />
         <Title level={4} style={{ color: "#faad14" }}>Erro ao Conectar com o Servidor</Title>
         <p>Não foi possível carregar a lista de mesas. Verifique sua conexão ou tente novamente.</p>
-        <Button type="primary" onClick={() => fetchTables && fetchTables()} icon={<ReloadOutlined />}>
+        <Button type="primary" onClick={handleReloadTables} icon={<ReloadOutlined />}>
           Tentar Novamente
         </Button>
       </div>
@@ -187,7 +199,12 @@ const TableGrid = () => {
         </Col>
         <Col>
           <Space>
-            <Button onClick={() => fetchTables && fetchTables()} loading={loadingTables} icon={<ReloadOutlined />} type="primary">
+            <Button 
+              onClick={handleReloadTables} 
+              loading={loadingTables} 
+              icon={<ReloadOutlined />} 
+              type="primary"
+            >
               Recarregar Mesas
             </Button>
           </Space>
@@ -214,7 +231,7 @@ const TableGrid = () => {
             <CoffeeOutlined style={{ fontSize: 40, color: "#ccc", marginBottom: 10 }} />
             <Title level={4} style={{ color: "#555" }}>Nenhuma Mesa Aberta Encontrada</Title>
             <p>O restaurante está vazio ou há um problema de dados.</p>
-            <Button type="default" onClick={() => fetchTables && fetchTables()} icon={<ReloadOutlined />}>
+            <Button type="default" onClick={handleReloadTables} icon={<ReloadOutlined />}>
               Verificar Novamente
             </Button>
           </Col>
