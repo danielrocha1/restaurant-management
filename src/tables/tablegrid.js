@@ -85,7 +85,7 @@ const TableGrid = () => {
 
       const controller = new AbortController();
       const url = "https://restaurant-sw98.onrender.com/tables/view";
-      const body = { number: table.number };
+      const body = { number: table.id };
 
       try {
         const res = await fetch(url, {
