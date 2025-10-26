@@ -70,7 +70,7 @@ const TableGrid = () => {
         const newArr = [...prev, ...toAdd];
         notification.open({
       message: "Nova(s) Mesa(s) Adicionada(s)",
-      description: `${count} mesa(s) adicionada(s) via WebSocket.`,
+      description: `1 mesa(s) adicionada(s) via WebSocket.`,
       icon: <TableOutlined style={{ color: "#1890ff" }} />,
       duration: 4, // Duração em segundos (0 = infinito)
       placement: "topRight", // Posição da notificação
