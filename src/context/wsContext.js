@@ -27,7 +27,8 @@ export const WSProvider = ({ children }) => {
   console.log("WSProvider: render — connectionStatus:", connectionStatus, "reconnectAttempts:", reconnectAttempts);
 
   // pegar as funções de notification e manter em ref para evitar stale closures
-  const notifications = useNotifications();
+  // <-- CORREÇÃO APLICADA: desestruturamos para pegar somente `notifications`
+  const { notifications } = useNotifications();
   const notificationsRef = useRef(notifications);
 
   useEffect(() => {
