@@ -95,7 +95,7 @@ const TableGrid = () => {
       setDrawerTableVisible(true); // abre o Drawer mostrando loading
 
       const controller = new AbortController();
-      const url = "https://restaurant-sw98.onrender.com/tables/view";
+      const url = "https://restaurant-2dfg.onrender.com/tables/view";
       const body = { number: table.id };
 
       try {

@@ -29,7 +29,7 @@ const { Option } = Select;
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
-const API_CATEGORIAS = "https://restaurant-sw98.onrender.com/categoriassub";
+const API_CATEGORIAS = "https://restaurant-2dfg.onrender.com/categoriassub";
 
 const CategoryCRUD = () => {
   const [categorias, setCategorias] = useState([]);

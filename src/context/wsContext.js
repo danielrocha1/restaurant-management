@@ -69,7 +69,7 @@ export const WSProvider = ({ children }) => {
 
     try {
       console.log("WS: criando nova conexão...");
-      const ws = new WebSocket("wss://restaurant-sw98.onrender.com/ws");
+      const ws = new WebSocket("wss://restaurant-2dfg.onrender.com/ws");
       wsRef.current = ws;
       manualCloseRef.current = false;
 

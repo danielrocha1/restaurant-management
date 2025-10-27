@@ -16,7 +16,7 @@ export const TableProvider = ({ children }) => {
     setErrorTables(false);
 
     try {
-      const res = await fetch("https://restaurant-sw98.onrender.com/tables/isopen");
+      const res = await fetch("https://restaurant-2dfg.onrender.com/tables/isopen");
       if (!res.ok) throw new Error("Falha na resposta da API");
 
       const data = await res.json();

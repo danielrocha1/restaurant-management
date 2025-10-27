@@ -99,7 +99,7 @@ export default function ClosedTablesPage() {
       setTables([]);
       try {
         const res = await fetch(
-          "https://restaurant-sw98.onrender.com/tables/viewcloseondate",
+          "https://restaurant-2dfg.onrender.com/tables/viewcloseondate",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -140,7 +140,7 @@ export default function ClosedTablesPage() {
     setDrawerVisible(true); 
 
     try {
-      const res = await fetch(`https://restaurant-sw98.onrender.com/tables/viewclose`, {
+      const res = await fetch(`https://restaurant-2dfg.onrender.com/tables/viewclose`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ID: id }),

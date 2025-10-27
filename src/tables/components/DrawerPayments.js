@@ -32,7 +32,7 @@ const paymentMethods = [
   { value: "vale_refeicao", label: "Vale Refeição" },
 ];
 
-const API_ENDPOINT = "https://restaurant-sw98.onrender.com/payment/"; // <<< NOVO: URL do seu endpoint Go
+const API_ENDPOINT = "https://restaurant-2dfg.onrender.com/payment/"; // <<< NOVO: URL do seu endpoint Go
 
 const DrawerPayment = ({
   tableID,
