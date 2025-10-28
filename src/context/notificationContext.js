@@ -12,6 +12,10 @@ import {
   UserOutlined,
   FireOutlined
 } from '@ant-design/icons';
+import { printKitchenOrder } from "../tables/utils/printKitchen";
+
+
+
 
 const NotificationContext = createContext();
 
@@ -73,18 +77,19 @@ export const NotificationProvider = ({ children }) => {
         duration: 5,
         style: { backgroundColor: '#e6f7ff', border: '1px solid #91d5ff' }
       });
+      printKitchenOrder(orderData, tableNumber)
     },
 
-    // tableClosed: (paymentData = {}) => {
-    //   const { tableNumber = '—', totalAmount = 0, paymentMethod = null } = paymentData;
-    //   showNotification('success', {
-    //     message: '💰 Pagamento Confirmado',
-    //     description: `Mesa ${tableNumber} finalizou o pagamento de R$ ${Number(totalAmount || 0).toFixed(2)} via ${paymentMethod || 'método não especificado'}.`,
-    //     icon: <DollarCircleOutlined style={{ color: '#52c41a' }} />,
-    //     duration: 5,
-    //     style: { backgroundColor: '#f6ffed', border: '1px solid #b7eb8f' }
-    //   });
-    // },
+    tableClosed: (paymentData = {}) => {
+      const { tableNumber = '—', totalAmount = 0, paymentMethod = null } = paymentData;
+      showNotification('success', {
+        message: '💰 Pagamento Confirmado',
+        description: `Mesa ${tableNumber} finalizou o pagamento de R$ ${Number(totalAmount || 0).toFixed(2)}}.`,
+        icon: <DollarCircleOutlined style={{ color: '#52c41a' }} />,
+        duration: 5,
+        style: { backgroundColor: '#f6ffed', border: '1px solid #b7eb8f' }
+      });
+    },
 
     lowStock: (p = {}) => {
       const { productName = 'Produto', currentStock = 0 } = p;
