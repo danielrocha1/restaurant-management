@@ -32,6 +32,7 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { motion, AnimatePresence } from "framer-motion";
+import FinancialDay from "../Financial/financial";
 
 const { Content } = Layout;
 
@@ -655,6 +656,8 @@ export default function ClosedTablesPage() {
         >
           {renderDrawerDetails()}
         </Drawer>
+
+        <FinancialDay date={date}/>
       </Content>
     </Layout>
   );
