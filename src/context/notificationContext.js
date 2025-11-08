@@ -12,7 +12,6 @@ import {
   UserOutlined,
   FireOutlined
 } from '@ant-design/icons';
-import { printKitchenOrder } from "../tables/utils/printKitchen";
 
 
 
