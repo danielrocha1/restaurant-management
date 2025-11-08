@@ -77,7 +77,6 @@ export const NotificationProvider = ({ children }) => {
         duration: 5,
         style: { backgroundColor: '#e6f7ff', border: '1px solid #91d5ff' }
       });
-      printKitchenOrder(orderData, tableNumber)
     },
 
     tableClosed: (paymentData = {}) => {

@@ -241,12 +241,14 @@ export const WSProvider = ({ children }) => {
       case "newOrder": {
         console.log("action newOrder recebida");
         const orderData = {
-          tableNumber: data.tableNumber || data.table_number || data.mesa,
-          orderTotal: data.orderTotal || data.total || data.valor,
-          itemCount: data.itemCount || data.items?.length || data.quantidade || 1,
+          tableNumber: data.tableNumber || data.table_number || data.mesaid,
+          orderTotal: data.Total || data.valor,
+          itemCount:  data.Items?.length,
         };
         console.log("newOrder: orderData ->", orderData);
         n?.newOrder && n.newOrder(orderData);
+        printKitchenOrder(data, data.mesaid)
+
         break;
       }
       case "tableClosed":
