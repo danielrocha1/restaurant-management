@@ -71,7 +71,7 @@ export const NotificationProvider = ({ children }) => {
       const { tableNumber = '—', orderTotal = 0, itemCount = 1 } = orderData;
       showNotification('info', {
         message: '🛒 Novo Pedido Recebido',
-        description: `Mesa ${tableNumber} fez um pedido com ${itemCount} ${itemCount === 1 ? 'item' : 'itens'}. Total: R$ ${Number(orderTotal || 0).toFixed(2)}`,
+        description: `Mesa ${tableNumber} fez um pedido com ${itemCount} ${itemCount === 1 ? 'item' : 'itens'}. Total: R$ ${Number(orderTotal || 0 / 100).toFixed(2)}`,
         icon: <ShoppingCartOutlined style={{ color: '#1890ff' }} />,
         duration: 5,
         style: { backgroundColor: '#e6f7ff', border: '1px solid #91d5ff' }
