@@ -83,6 +83,20 @@ const TableGrid = () => {
         return newArr;
       });
     }
+
+    if (parsed && parsed.action === "closeTable") {
+      const incoming = parsed.table || parsed.tables || parsed.tableData || [];
+      const incomingArray = Array.isArray(incoming) ? incoming : [incoming];
+
+      if (incomingArray.length === 0) return;
+
+      setTables((prev = []) => {
+        const removeIds = new Set(incomingArray.map((t) => t.id));
+        const newArr = prev.filter((t) => !removeIds.has(t.id));
+
+        return newArr;
+      });
+    }
   }, [messages, setTables]);
 
   // ===== 1. Carregar Pedidos da Mesa =====
