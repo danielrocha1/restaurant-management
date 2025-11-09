@@ -85,18 +85,21 @@ const TableGrid = () => {
     }
 
     if (parsed && parsed.action === "closeTable") {
-      const incoming = parsed.table || parsed.tables || parsed.tableData || [];
-      const incomingArray = Array.isArray(incoming) ? incoming : [incoming];
+  const incoming = parsed.table || parsed.tables || parsed.tableData || [];
+  const incomingArray = Array.isArray(incoming) ? incoming : [incoming];
 
-      if (incomingArray.length === 0) return;
+  if (incomingArray.length === 0) return;
 
-      setTables((prev = []) => {
-        const removeIds = new Set(incomingArray.map((t) => t.id));
-        const newArr = prev.filter((t) => !removeIds.has(t.id));
+  setTables((prev = []) => {
+    // cria um conjunto com os IDs vindos do backend
+    const removeIds = new Set(incomingArray.map((t) => t.mesaID));
 
-        return newArr;
-      });
-    }
+    // remove da lista atual as mesas que correspondem aos mesaID recebidos
+    const newArr = prev.filter((t) => !removeIds.has(t.id || t.mesaID));
+
+    return newArr;
+  });
+}
   }, [messages, setTables]);
 
   // ===== 1. Carregar Pedidos da Mesa =====

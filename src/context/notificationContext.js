@@ -80,11 +80,15 @@ export const NotificationProvider = ({ children }) => {
 
      tableClosed: (tableData) => {
       console.log("🔴 MESA FECHADA");
-      const tableCount = Array.isArray(tableData) ? tableData.length : 1;
-      const tableNumbers = Array.isArray(tableData)
-        ? tableData.map(t => t.number ?? t.id).join(', ')
-        : (tableData?.number ?? tableData?.id ?? '—');
 
+      // Garante que sempre seja um array
+      const tables = Array.isArray(tableData) ? tableData : [tableData];
+      const tableCount = tables.length;
+
+      // Extrai o número da mesa corretamente, usando mesaNumber
+      const tableNumbers = tables
+        .map(t => t.mesaNumber ?? t.number ?? t.mesaID ?? t.id ?? '—')
+        .join(', ');
 
       showNotification('info', {
         message: '🧾 Mesa Fechada',
@@ -93,10 +97,11 @@ export const NotificationProvider = ({ children }) => {
         duration: 6,
         style: {
           backgroundColor: '#fffbe6',
-          border: '1px solid #ffe58f'
-        }
+          border: '1px solid #ffe58f',
+        },
       });
     },
+
 
 
     // lowStock: (p = {}) => {
