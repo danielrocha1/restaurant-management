@@ -78,27 +78,39 @@ export const NotificationProvider = ({ children }) => {
       });
     },
 
-    tableClosed: (paymentData = {}) => {
-      const { tableNumber = '—', totalAmount = 0, paymentMethod = null } = paymentData;
-      showNotification('success', {
-        message: '💰 Pagamento Confirmado',
-        description: `Mesa ${tableNumber} finalizou o pagamento de R$ ${Number(totalAmount || 0).toFixed(2)}}.`,
-        icon: <DollarCircleOutlined style={{ color: '#52c41a' }} />,
-        duration: 5,
-        style: { backgroundColor: '#f6ffed', border: '1px solid #b7eb8f' }
+     tableClosed: (tableData) => {
+      console.log("🔴 MESA FECHADA");
+      const tableCount = Array.isArray(tableData) ? tableData.length : 1;
+      const tableNumbers = Array.isArray(tableData)
+        ? tableData.map(t => t.number ?? t.id).join(', ')
+        : (tableData?.number ?? tableData?.id ?? '—');
+
+
+      showNotification('info', {
+        message: '🧾 Mesa Fechada',
+        description: `Mesa${tableCount > 1 ? 's' : ''} ${tableNumbers} foi${tableCount > 1 ? 'ram' : ''} fechada${tableCount > 1 ? 's' : ''}.`,
+        icon: <TableOutlined style={{ color: '#faad14' }} />,
+        duration: 6,
+        style: {
+          backgroundColor: '#fffbe6',
+          border: '1px solid #ffe58f'
+        }
       });
+
+      console.log(`Total de mesas abertas: ${openTableCount}`);
     },
 
-    lowStock: (p = {}) => {
-      const { productName = 'Produto', currentStock = 0 } = p;
-      showNotification('warning', {
-        message: '⚠️ Estoque Baixo',
-        description: `O produto "${productName}" está com estoque baixo (${currentStock} unidades restantes).`,
-        icon: <ExclamationCircleOutlined style={{ color: '#faad14' }} />,
-        duration: 8,
-        style: { backgroundColor: '#fffbe6', border: '1px solid #ffe58f' }
-      });
-    },
+
+    // lowStock: (p = {}) => {
+    //   const { productName = 'Produto', currentStock = 0 } = p;
+    //   showNotification('warning', {
+    //     message: '⚠️ Estoque Baixo',
+    //     description: `O produto "${productName}" está com estoque baixo (${currentStock} unidades restantes).`,
+    //     icon: <ExclamationCircleOutlined style={{ color: '#faad14' }} />,
+    //     duration: 8,
+    //     style: { backgroundColor: '#fffbe6', border: '1px solid #ffe58f' }
+    //   });
+    // },
 
     connectionError: (msg) => {
       showNotification('error', {

@@ -251,7 +251,16 @@ export const WSProvider = ({ children }) => {
 
         break;
       }
-      case "tableClosed":
+      case "closeTable":{
+        console.log("action tableClosed recebida");
+        const tableData = {
+          tableNumber: data.table || data.table_number || data.mesa,
+        };
+        console.log("tableClosed: tableData ->", tableData);
+        n?.tableClosed && n.tableClosed(tableData);
+        break;
+      }
+
       case "paymentCompleted": {
         console.log("action tableClosed/paymentCompleted recebida");
         const paymentData = {
