@@ -96,8 +96,6 @@ export const NotificationProvider = ({ children }) => {
           border: '1px solid #ffe58f'
         }
       });
-
-      console.log(`Total de mesas abertas: ${openTableCount}`);
     },
 
 
