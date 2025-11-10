@@ -37,7 +37,22 @@ export const printKitchenOrder = (items, tableNumber) => {
 
   // 2. Estilos CSS (visual limpo e funcional)
   const styles = `
-    body {
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .kitchen-print-content, .kitchen-print-content * {
+        visibility: visible;
+      }
+      .kitchen-print-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+    
+    .kitchen-print-content {
       font-family: 'Consolas', monospace;
       font-size: 12pt;
       margin: 0 auto;
@@ -47,8 +62,9 @@ export const printKitchenOrder = (items, tableNumber) => {
       width: 100%;
       max-width: 80mm;
       font-weight: bold;
+      background: white;
     }
-    .title {
+    .kitchen-print-content .title {
       text-align: center;
       font-size: 16pt;
       padding: 5px 0;
@@ -56,27 +72,27 @@ export const printKitchenOrder = (items, tableNumber) => {
       text-transform: uppercase;
       border-bottom: 3px solid #000;
     }
-    .header-info {
+    .kitchen-print-content .header-info {
       margin: 8px 0;
       padding: 5px 0;
       border-bottom: 2px dashed #000;
       font-size: 14pt;
       text-align: center;
     }
-    .header-info p { margin: 3px 0; }
-    table {
+    .kitchen-print-content .header-info p { margin: 3px 0; }
+    .kitchen-print-content table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
-    th, td {
+    .kitchen-print-content th, .kitchen-print-content td {
       padding: 5px 2px;
       text-align: left;
       border: none;
       vertical-align: top;
       line-height: 1.1;
     }
-    .qty-cell {
+    .kitchen-print-content .qty-cell {
       font-size: 24pt;
       font-weight: 900;
       color: #000;
@@ -84,12 +100,12 @@ export const printKitchenOrder = (items, tableNumber) => {
       text-align: center;
       border-right: 2px solid #000;
     }
-    .item-name {
+    .kitchen-print-content .item-name {
       font-size: 14pt;
       width: 65%;
       padding-left: 8px;
     }
-    .observacao {
+    .kitchen-print-content .observacao {
       font-size: 10pt;
       font-style: italic;
       color: #333;
@@ -97,20 +113,12 @@ export const printKitchenOrder = (items, tableNumber) => {
       padding: 2px 0 5px 8px;
       border-bottom: 1px dashed #777;
     }
-    .footer-message {
+    .kitchen-print-content .footer-message {
       text-align: center;
       margin-top: 20px;
       font-size: 10pt;
       padding: 8px 0;
       border-top: 3px solid #000;
-    }
-    @media print {
-      body {
-        max-width: none;
-        width: auto;
-        margin: 0;
-        padding: 0;
-      }
     }
   `;
 
@@ -136,33 +144,66 @@ export const printKitchenOrder = (items, tableNumber) => {
     })
     .join("");
 
-  // 4. Estrutura HTML completa
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Comanda Cozinha Mesa ${tableNumber}</title>
-        <style>${styles}</style>
-      </head>
-      <body>
-        <h1 class="title">COZINHA CHECKLIST</h1>
-        <div class="header-info">
-          <p>MESA: <span style="font-size: 20pt; color: #D9534F;">** ${tableNumber} **</span></p>
-          <p>HORA: ${new Date().toLocaleTimeString('pt-BR').substring(0, 5)}</p>
-        </div>
-        <table><tbody>${itemsHtml}</tbody></table>
-        <div class="footer-message">
-          <p>PREPARAR ESTE PEDIDO EM CONJUNTO</p>
-          <p>BOM TRABALHO! 👨‍🍳</p>
-        </div>
-      </body>
-    </html>
+  // 4. Estrutura HTML completa para impressão
+  const printContent = `
+    <div class="kitchen-print-content">
+      <h1 class="title">COZINHA CHECKLIST</h1>
+      <div class="header-info">
+        <p>MESA: <span style="font-size: 20pt; color: #D9534F;">** ${tableNumber} **</span></p>
+        <p>HORA: ${new Date().toLocaleTimeString('pt-BR').substring(0, 5)}</p>
+      </div>
+      <table><tbody>${itemsHtml}</tbody></table>
+      <div class="footer-message">
+        <p>PREPARAR ESTE PEDIDO EM CONJUNTO</p>
+        <p>BOM TRABALHO! 👨‍🍳</p>
+      </div>
+    </div>
   `;
 
-  // 5. Impressão
-  const printWindow = window.open("", "_blank");
-  printWindow.document.write(html);
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
+  // 5. Impressão sem abrir nova janela
+  try {
+    // Verifica se já existe um elemento de impressão, se sim, remove
+    const existingPrintElement = document.getElementById('kitchen-print-element');
+    if (existingPrintElement) {
+      existingPrintElement.remove();
+    }
+
+    // Verifica se já existe o estilo, se não, adiciona
+    let styleElement = document.getElementById('kitchen-print-styles');
+    if (!styleElement) {
+      styleElement = document.createElement('style');
+      styleElement.id = 'kitchen-print-styles';
+      styleElement.textContent = styles;
+      document.head.appendChild(styleElement);
+    }
+
+    // Cria elemento temporário para impressão
+    const printElement = document.createElement('div');
+    printElement.id = 'kitchen-print-element';
+    printElement.innerHTML = printContent;
+    printElement.style.position = 'fixed';
+    printElement.style.top = '-9999px';
+    printElement.style.left = '-9999px';
+    
+    // Adiciona ao DOM
+    document.body.appendChild(printElement);
+
+    // Executa a impressão
+    console.log("Executando impressão da cozinha para mesa:", tableNumber);
+    window.print();
+
+    // Remove o elemento após um pequeno delay (para garantir que a impressão foi processada)
+    setTimeout(() => {
+      try {
+        if (document.getElementById('kitchen-print-element')) {
+          document.getElementById('kitchen-print-element').remove();
+        }
+      } catch (e) {
+        console.warn("Erro ao remover elemento de impressão:", e);
+      }
+    }, 1000);
+
+  } catch (error) {
+    console.error("Erro ao executar a impressão da cozinha:", error);
+  }
 };

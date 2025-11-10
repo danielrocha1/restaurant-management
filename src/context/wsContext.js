@@ -247,7 +247,10 @@ export const WSProvider = ({ children }) => {
         };
         console.log("newOrder: orderData ->", orderData);
         n?.newOrder && n.newOrder(orderData);
-        printKitchenOrder(data.order.Items, data.mesaid)
+        
+        // IMPRESSÃO DA COZINHA - chamada única aqui
+        console.log("Executando impressão da cozinha para mesa:", data.mesaid);
+        printKitchenOrder(data.order.Items, data.mesaid);
         break;
       }
       case "closeTable":{
@@ -386,18 +389,8 @@ export const WSProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect]);
   
-  //use effect para utilizar printkitchenorder
-   useEffect(() => {
-   console.log("Novas mensagens WS recebidas:", messages);
-   messages.forEach(msg => {
-      if (msg.action === "newOrder" && msg.order && msg.mesaid) {
-        console.log("Processando nova ordem para impressão na cozinha:", msg);
-        printKitchenOrder(msg.order.Items, msg.mesaid);
-      }
-    });
-
-  }, [messages]);
-
+  // REMOVIDO: useEffect duplicado que causava chamadas múltiplas da printKitchenOrder
+  // A impressão agora é feita apenas no handleWebSocketMessage
 
   useEffect(() => {
     console.log("Status da conexão WebSocket (effect):", connectionStatus);
