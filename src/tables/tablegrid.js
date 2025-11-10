@@ -24,7 +24,7 @@ import { useTables } from "../context/tablesContext";
 import { useWS } from "../context/wsContext";
 import { useNotifications } from "../context/notificationContext";
 
-import { printKitchenOrder } from "./utils/printKitchenOrder";
+import { printKitchenOrder } from "./utils/printKitchen/printKitchenOrder";
 
 const { Title, Text } = Typography;
 
