@@ -60,6 +60,7 @@ const TableGrid = () => {
         return;
       }
     }
+      console.log("WS newOrder recebido:", parsed, parsed.action === "newOrder");
 
     if (parsed && parsed.action === "newOrder") {
       console.log("WS newOrder recebido:", parsed);
