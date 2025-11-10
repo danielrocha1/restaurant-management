@@ -24,8 +24,6 @@ import { useTables } from "../context/tablesContext";
 import { useWS } from "../context/wsContext";
 import { useNotifications } from "../context/notificationContext";
 
-import { printKitchenOrder } from "./utils/printKitchen";
-
 const { Title, Text } = Typography;
 
 const TableGrid = () => {
@@ -60,13 +58,6 @@ const TableGrid = () => {
         return;
       }
     }
-      console.log("WS newOrder recebido:", parsed, parsed.action === "newOrder");
-
-    if (parsed && parsed.action === "newOrder") {
-      console.log("WS newOrder recebido:", parsed);
-      printKitchenOrder(parsed.order.Items, parsed.mesaid)
-    }
-
 
     // Processa apenas mensagens de adição de mesa
     if (parsed && parsed.action === "addTable") {
