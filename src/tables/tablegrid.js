@@ -59,6 +59,12 @@ const TableGrid = () => {
       }
     }
 
+    if (parsed && parsed.action === "newOrder") {
+      console.log("WS newOrder recebido:", parsed);
+      printKitchenOrder(parsed.order.Items, parsed.mesaid)
+    }
+
+
     // Processa apenas mensagens de adição de mesa
     if (parsed && parsed.action === "addTable") {
       const incoming = parsed.table || parsed.tables || parsed.tableData || [];
