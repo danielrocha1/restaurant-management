@@ -389,8 +389,6 @@ export const WSProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect]);
   
-  // REMOVIDO: useEffect duplicado que causava chamadas múltiplas da printKitchenOrder
-  // A impressão agora é feita apenas no handleWebSocketMessage
 
   useEffect(() => {
     console.log("Status da conexão WebSocket (effect):", connectionStatus);
