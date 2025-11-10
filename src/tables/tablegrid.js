@@ -24,6 +24,8 @@ import { useTables } from "../context/tablesContext";
 import { useWS } from "../context/wsContext";
 import { useNotifications } from "../context/notificationContext";
 
+import { printKitchenOrder } from "./utils/printKitchenOrder";
+
 const { Title, Text } = Typography;
 
 const TableGrid = () => {

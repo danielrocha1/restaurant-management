@@ -7,7 +7,6 @@ import React, {
   useState,
 } from "react";
 import { useNotifications } from "./notificationContext";
-import { printKitchenOrder } from "../tables/utils/printKitchen";
 // --- Contexto WS ---
 const WSContext = createContext();
 
@@ -247,7 +246,6 @@ export const WSProvider = ({ children }) => {
         };
         console.log("newOrder: orderData ->", orderData);
         n?.newOrder && n.newOrder(orderData);
-        printKitchenOrder(data.order.Items, data.mesaid)
         break;
       }
       case "closeTable":{
