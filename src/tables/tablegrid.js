@@ -65,7 +65,7 @@ const TableGrid = () => {
       const incomingArray = Array.isArray(incoming) ? incoming : [incoming];
 
       if (incomingArray.length === 0) return;
-
+      console.log("🆕 Adicionando novas mesas via WS:", incomingArray);
       // Calcula o que realmente será adicionado (evita duplicatas por id)
       setTables((prev = []) => {
         const existIds = new Set(prev.map((t) => t.id));

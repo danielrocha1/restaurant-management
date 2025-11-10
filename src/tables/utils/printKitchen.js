@@ -227,8 +227,4 @@ export const printKitchenOrder = (items, tableNumber) => {
   console.log("=== FIM DA FUNÇÃO printKitchenOrder ===");
 };
 
-// Expor função de teste globalmente para debug
-if (typeof window !== 'undefined') {
-  window.testPrintKitchen = testPrintKitchen;
-  window.printKitchenOrder = printKitchenOrder;
-}
+ 
