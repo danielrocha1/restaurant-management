@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { useNotifications } from "./notificationContext";
+import { printKitchenOrder } from "../tables/utils/printKitchen";
 // --- Contexto WS ---
 const WSContext = createContext();
 
